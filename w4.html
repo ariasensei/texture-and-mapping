@@ -1,0 +1,316 @@
+<!doctype html>
+<html lang="en"><head><script src="/_sdk/telemetry_sdk.js"></script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Week 4 - UV Mapping Fundamentals</title>
+  <script src="https://cdn.tailwindcss.com/3.4.17"></script>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700;900&amp;display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/lucide@0.263.0/dist/umd/lucide.min.js"></script>
+  <style>
+        body { font-family: 'DM Sans', sans-serif; }
+        .glass { background: rgba(255,255,255,0.03); backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,0.08); transition: all 0.3s ease; }
+        .glass:hover { border-color: rgba(139,92,246,0.3); transform: translateY(-2px); }
+        .gradient-border { position: relative; }
+        .gradient-border::before { content:''; position:absolute; inset:-1px; border-radius:inherit; padding:1px; background:linear-gradient(135deg,#8b5cf6,#06b6d4,#8b5cf6); -webkit-mask:linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0); mask:linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0); -webkit-mask-composite:xor; mask-composite:exclude; opacity:0.4; transition:opacity 0.3s; pointer-events:none; }
+        .gradient-border:hover::before { opacity:0.8; }
+        .neon-glow { text-shadow: 0 0 20px rgba(139,92,246,0.5), 0 0 60px rgba(139,92,246,0.2); }
+        .quiz-option { transition: all 0.2s; cursor: pointer; border: 1px solid rgba(139,92,246,0.2); background: rgba(139,92,246,0.05); }
+        .quiz-option:hover { border-color: rgba(139,92,246,0.6); background: rgba(139,92,246,0.12); transform: translateX(4px); }
+        .quiz-option.correct { border-color: #22c55e; background: rgba(34,197,94,0.15); }
+        .quiz-option.wrong { border-color: #ef4444; background: rgba(239,68,68,0.15); }
+        .quiz-option.disabled { pointer-events: none; opacity: 0.7; }
+        .fade-up { opacity: 0; transform: translateY(30px); transition: opacity 0.6s ease, transform 0.6s ease; }
+        .fade-up.visible { opacity: 1; transform: translateY(0); }
+        .floating-orb { position: absolute; border-radius: 50%; filter: blur(80px); animation: float 8s ease-in-out infinite; }
+        @keyframes float { 0%,100%{ transform: translateY(0) scale(1); } 50%{ transform: translateY(-20px) scale(1.05); } }
+        .nav-pill { transition: all 0.2s; padding: 6px 14px; border-radius: 20px; }
+        .nav-pill:hover { background: rgba(139,92,246,0.15); color: #c4b5fd; }
+    </style>
+  <script src="/_sdk/data_sdk.js" type="text/javascript"></script>
+  <script src="/_sdk/resizing_sdk.js" type="text/javascript"></script>
+ </head>
+ <body data-template-id="__page-root" class="min-h-screen w-full text-slate-200" style="background: rgb(8, 8, 15);">
+  <header class="relative overflow-hidden min-h-[50vh] flex items-center justify-center"><img data-template-id="hero-image" class="canva-image absolute inset-0 w-full h-full object-cover opacity-25" loading="lazy" src="https://images.pexels.com/photos/5011647/pexels-photo-5011647.jpeg?auto=compress&amp;cs=tinysrgb&amp;w=1920" alt="A vibrant and futuristic 3D cube with glowing edges on a dark blue background">
+   <div class="absolute inset-0 bg-gradient-to-b from-[#0a0a12]/80 via-[#0a0a12]/40 to-[#0a0a12]"></div>
+   <div class="floating-orb w-72 h-72 bg-purple-600/30 top-10 -left-20"></div>
+   <div class="floating-orb w-56 h-56 bg-cyan-500/20 bottom-10 right-10" style="animation-delay:-4s"></div>
+   <div class="relative z-10 px-6 py-20 text-center max-w-4xl mx-auto">
+    <p data-template-id="institution-label" class="canva-text text-xs uppercase tracking-[0.25em] mb-4 opacity-80" style="color: rgb(167, 139, 250); font-weight: 400; font-style: normal; font-size: 16px;">University of Perpetual Help System DALTA – Las Piñas
+
+Instructor: MKDB</p>
+    <h1 data-template-id="page-title" class="canva-text neon-glow leading-tight" style="color: rgb(255, 255, 255); font-weight: 900; font-style: normal; font-size: 42px;">Week 4: UV Mapping Fundamentals</h1>
+    <p data-template-id="page-subtitle" class="canva-text mt-4 text-lg opacity-90" style="color: rgb(196, 181, 253); font-weight: 400; font-style: normal; font-size: 16px;">UV Coordinates • UV Islands • UV Layout Principles • Common UV Issues</p>
+   </div>
+  </header>
+  <nav class="sticky top-0 z-50 bg-[#0a0a12]/90 backdrop-blur-xl border-b border-white/5 px-4 py-3 overflow-x-auto">
+   <div class="max-w-6xl mx-auto flex gap-2 text-sm text-slate-400 whitespace-nowrap"><a href="#lecture" class="nav-pill">Lecture</a> <a href="#uv-coords" class="nav-pill">UV Coords</a> <a href="#uv-islands" class="nav-pill">Islands</a> <a href="#uv-layout" class="nav-pill">Layout</a> <a href="#uv-issues" class="nav-pill">Issues</a> <a href="#group-activity" class="nav-pill">Group</a> <a href="#individual-activity" class="nav-pill">Individual</a> <a href="#laboratory" class="nav-pill">Lab</a> <a href="#quiz" class="nav-pill">Quiz</a>
+   </div>
+  </nav>
+  <main class="max-w-5xl mx-auto px-4 py-12 space-y-14"><!-- LECTURE INTRO -->
+   <section id="lecture" class="fade-up">
+    <h2 data-template-id="lecture-heading" class="canva-text neon-glow mb-8" style="color: rgb(224, 231, 255); font-weight: 700; font-style: normal; font-size: 24px;">📖 Lecture Content</h2>
+    <div data-template-id="intro-card" class="canva-card glass gradient-border rounded-2xl p-7 mb-6" style="background: rgba(15, 15, 30, 0.6);">
+     <h3 data-template-id="intro-title" class="canva-text font-bold mb-4" style="color: rgb(6, 182, 212); font-weight: 700; font-style: normal; font-size: 20px;">What is UV Mapping and Why Does It Matter?</h3>
+     <p data-template-id="intro-content-1" class="canva-text leading-relaxed mb-4" style="color: rgb(203, 213, 225); font-weight: 400; font-style: normal; font-size: 16px;">UV mapping is the process of projecting a 2D image (texture) onto a 3D model's surface. Think of it like wrapping a gift — you need to flatten the wrapping paper (2D) so it covers the box (3D) without crumpling, stretching, or leaving gaps. In 3D graphics, every single textured object you've ever seen in a game, movie, or animation has UV coordinates that tell the software exactly which part of the texture image goes on which part of the 3D surface.</p>
+     <p data-template-id="intro-content-2" class="canva-text leading-relaxed mb-4" style="color: rgb(148, 163, 184); font-weight: 400; font-style: normal; font-size: 16px;">The letters 'U' and 'V' represent the axes of the 2D texture space (horizontal and vertical), just like X, Y, Z represent 3D space. We use U and V instead of X and Y to avoid confusion — X, Y, Z are already taken by the 3D model's world coordinates. A poorly UV-mapped model will have stretched textures, visible seams, wasted texture space, and unprofessional results — even if the texture painting itself is beautiful.</p>
+     <p data-template-id="intro-content-3" class="canva-text leading-relaxed" style="color: rgb(148, 163, 184); font-weight: 400; font-style: normal; font-size: 16px;">This week we'll cover how UV coordinates work mathematically, what UV islands are and how to create them intelligently, professional layout principles used in game studios, and common problems you'll encounter (with solutions). Tool for this week: Blender (free, open source) with its built-in UV Editor. We'll also use UV Mapping demonstration files provided by the instructor.</p>
+    </div>
+   </section><!-- UV COORDINATES -->
+   <section id="uv-coords" class="fade-up">
+    <div data-template-id="coords-card" class="canva-card glass gradient-border rounded-2xl p-7 mb-6" style="background: rgba(15, 15, 30, 0.6);">
+     <h3 data-template-id="coords-title" class="canva-text font-bold mb-4" style="color: rgb(6, 182, 212); font-weight: 700; font-style: normal; font-size: 20px;">1. UV Coordinates</h3><img data-template-id="coords-image" class="canva-image w-full h-48 object-cover rounded-xl mb-4" loading="lazy" src="https://images.pexels.com/photos/4458203/pexels-photo-4458203.jpeg?auto=compress&amp;cs=tinysrgb&amp;w=800" alt="Close-up of detailed blueprints highlighting architectural design elements">
+     <p data-template-id="coords-content-1" class="canva-text leading-relaxed mb-4" style="color: rgb(203, 213, 225); font-weight: 400; font-style: normal; font-size: 16px;">UV coordinates define a mapping between each vertex on your 3D model and a specific point on the 2D texture image. The UV space is normalized from 0 to 1 on both axes: the bottom-left corner of your texture is (0, 0) and the top-right corner is (1, 1). Every vertex of your 3D mesh stores a UV coordinate pair that tells the rendering engine: "For this vertex, sample the texture at this exact position."</p>
+     <p data-template-id="coords-content-2" class="canva-text leading-relaxed mb-4" style="color: rgb(148, 163, 184); font-weight: 400; font-style: normal; font-size: 16px;">Realistic Example: Imagine you have a simple square face (a quad) on your 3D model. Its four vertices might have UV coordinates: bottom-left (0.2, 0.3), bottom-right (0.5, 0.3), top-right (0.5, 0.6), top-left (0.2, 0.6). This means the quad will display the rectangular portion of your texture image between those coordinates — roughly the center-left area of the texture. Move those UV points, and the quad shows a different part of the texture.</p>
+     <p data-template-id="coords-content-3" class="canva-text leading-relaxed mb-4" style="color: rgb(148, 163, 184); font-weight: 400; font-style: normal; font-size: 16px;">Key Concepts:
+• UV values outside 0–1 range cause the texture to tile (repeat). This is intentional for things like brick walls or fabric patterns, but accidental tiling is a common bug.
+• Multiple vertices can share the same UV coordinates (overlapping UVs) — useful for mirroring symmetrical objects to save texture space.
+• Each face/polygon interpolates the UV coordinates of its vertices to determine which texel (texture pixel) maps to each point on the surface.
+• Resolution depends on how much UV space a face occupies: more UV space = more texture pixels = sharper detail on that area.</p>
+     <p data-template-id="coords-content-4" class="canva-text leading-relaxed" style="color: rgb(167, 139, 250); font-weight: 400; font-style: normal; font-size: 16px;">Real-World Analogy: Think of UV coordinates like GPS coordinates for a map. Your 3D model is the terrain, your texture is the map image, and UV coordinates are the GPS pins that say "this point on the terrain corresponds to this point on the map." If you place the pins incorrectly, the map labels end up in the wrong places — a river name might appear on a mountain. That's exactly what happens with bad UV mapping: textures appear in wrong places on your model.</p>
+    </div>
+   </section><!-- UV ISLANDS -->
+   <section id="uv-islands" class="fade-up">
+    <div data-template-id="islands-card" class="canva-card glass gradient-border rounded-2xl p-7 mb-6" style="background: rgba(15, 15, 30, 0.6);">
+     <h3 data-template-id="islands-title" class="canva-text font-bold mb-4" style="color: rgb(6, 182, 212); font-weight: 700; font-style: normal; font-size: 20px;">2. UV Islands</h3><img data-template-id="islands-image" class="canva-image w-full h-48 object-cover rounded-xl mb-4" loading="lazy" src="https://images.pexels.com/photos/1586951/pexels-photo-1586951.jpeg?auto=compress&amp;cs=tinysrgb&amp;w=800" alt="A close-up view of colorful jigsaw puzzle pieces scattered on a surface">
+     <p data-template-id="islands-content-1" class="canva-text leading-relaxed mb-4" style="color: rgb(203, 213, 225); font-weight: 400; font-style: normal; font-size: 16px;">A UV island is a connected group of UV faces that forms a single continuous "piece" in UV space. When you unwrap a 3D model, you cut it along certain edges (called seams) to flatten it — just like cutting a cardboard box along its edges to lay it flat. Each separate flattened piece becomes a UV island. A simple cube unwrapped with standard cuts produces 6 islands (one per face) or fewer islands if you leave some edges connected.</p>
+     <p data-template-id="islands-content-2" class="canva-text leading-relaxed mb-4" style="color: rgb(148, 163, 184); font-weight: 400; font-style: normal; font-size: 16px;">Realistic Example — Unwrapping a Character's Head: You'd typically place a seam running from the back of the neck, up over the top of the head, and possibly along the jawline underneath. This creates one large island for the front face (the part players see most) and allows the back to flatten without stretching. The ears might be separate islands. Game studios prioritize keeping the face as one continuous island to avoid visible seams where players look most.</p>
+     <p data-template-id="islands-content-3" class="canva-text leading-relaxed mb-4" style="color: rgb(148, 163, 184); font-weight: 400; font-style: normal; font-size: 16px;">Seam Placement Strategy:
+• Place seams in areas that are hidden from the camera (back of head, underside of objects, inner thighs of characters)
+• Place seams along natural material boundaries (where a belt meets pants, where a sleeve meets a shirt body)
+• Fewer seams = fewer islands = easier texture painting, BUT more potential stretching
+• More seams = more islands = less stretching, BUT more visible seam lines and harder to paint across
+• The goal is finding the minimum number of seams that eliminates unacceptable stretching</p>
+     <p data-template-id="islands-content-4" class="canva-text leading-relaxed" style="color: rgb(167, 139, 250); font-weight: 400; font-style: normal; font-size: 16px;">Practical Tip: In Blender, you can visualize stretching using the "Stretch" overlay in the UV Editor (blue = no stretch, green = some stretch, red = heavy stretch). Professional artists iterate: unwrap, check stretch, add a seam where red appears, re-unwrap, repeat until the entire model shows blue/green only. A character model for a AAA game might have 20-40 carefully placed seams. A simple prop (barrel, crate) might need only 3-5.</p>
+    </div>
+   </section><!-- UV LAYOUT PRINCIPLES -->
+   <section id="uv-layout" class="fade-up">
+    <div data-template-id="layout-card" class="canva-card glass gradient-border rounded-2xl p-7 mb-6" style="background: rgba(15, 15, 30, 0.6);">
+     <h3 data-template-id="layout-title" class="canva-text font-bold mb-4" style="color: rgb(6, 182, 212); font-weight: 700; font-style: normal; font-size: 20px;">3. UV Layout Principles</h3><img data-template-id="layout-image" class="canva-image w-full h-48 object-cover rounded-xl mb-4" loading="lazy" src="https://images.pexels.com/photos/6991812/pexels-photo-6991812.jpeg?auto=compress&amp;cs=tinysrgb&amp;w=800" alt="Orange sticky notes arranged in a symmetrical geometric pattern on a pastel surface">
+     <p data-template-id="layout-content-1" class="canva-text leading-relaxed mb-4" style="color: rgb(203, 213, 225); font-weight: 400; font-style: normal; font-size: 16px;">Once you have your UV islands, you need to arrange them efficiently within the 0-1 UV space. This is called UV layout or UV packing. The goal: maximize texture utilization (minimal empty space), maintain consistent texel density across the model, and keep related parts near each other for easier painting. Professional game artists treat UV layout like solving a tetris puzzle — every pixel of texture space is valuable.</p>
+     <p data-template-id="layout-content-2" class="canva-text leading-relaxed mb-4" style="color: rgb(148, 163, 184); font-weight: 400; font-style: normal; font-size: 16px;">Texel Density — The Most Important Concept: Texel density means how many texture pixels (texels) cover a given area of your 3D model's surface. If a character's face takes up 40% of UV space but their boots take up only 5%, the face will have 8x more texture detail than the boots. This is often intentional (faces need more detail), but unintentional density variation looks unprofessional. Use Blender's "Texel Density Checker" addon to verify consistency.</p>
+     <p data-template-id="layout-content-3" class="canva-text leading-relaxed mb-4" style="color: rgb(148, 163, 184); font-weight: 400; font-style: normal; font-size: 16px;">Professional Layout Rules:
+• Maintain consistent texel density for objects viewed at similar distances
+• Give priority UV space to hero surfaces (areas players see up close: face, chest, weapon)
+• Keep a small gap (padding/margin) between islands — typically 4-8 pixels at 2048x2048 resolution — to prevent color bleeding when mipmaps are generated
+• Align straight edges to grid lines where possible (especially for architectural/hard-surface models) for cleaner texturing
+• Orient islands so they're easy to paint across (legs should be laid out straight, not curled)</p>
+     <p data-template-id="layout-content-4" class="canva-text leading-relaxed" style="color: rgb(167, 139, 250); font-weight: 400; font-style: normal; font-size: 16px;">Industry Example: In a mobile game running 512×512 textures, every pixel matters. A sword might share a texture atlas with a shield and a helmet. The artist must pack all three objects' UV islands into one square, maximizing coverage. If only 60% of the texture is used (40% empty), you're wasting 40% of your VRAM budget for that draw call. AAA games target 85-95% UV space utilization. Tools like UVPackmaster or Blender's built-in "Pack Islands" help automate this.</p>
+    </div>
+   </section><!-- COMMON UV ISSUES -->
+   <section id="uv-issues" class="fade-up">
+    <div data-template-id="issues-card" class="canva-card glass gradient-border rounded-2xl p-7 mb-6" style="background: rgba(15, 15, 30, 0.6);">
+     <h3 data-template-id="issues-title" class="canva-text font-bold mb-4" style="color: rgb(6, 182, 212); font-weight: 700; font-style: normal; font-size: 20px;">4. Common UV Issues</h3><img data-template-id="issues-image" class="canva-image w-full h-48 object-cover rounded-xl mb-4" loading="lazy" src="https://images.pexels.com/photos/30320063/pexels-photo-30320063.jpeg?auto=compress&amp;cs=tinysrgb&amp;w=800" alt="Black and white close-up of crumpled aluminum foil with reflective properties">
+     <p data-template-id="issues-content-1" class="canva-text leading-relaxed mb-4" style="color: rgb(203, 213, 225); font-weight: 400; font-style: normal; font-size: 16px;">Stretching occurs when UV faces are significantly different in proportion from their corresponding 3D faces. Imagine printing a square photo onto a rectangular surface — the image distorts. In UV terms, if a square face on your model maps to a long rectangle in UV space, the texture will appear squished on that face. Fix: Add seams to relieve the distortion, or manually adjust UV vertices to match the 3D face proportions.</p>
+     <p data-template-id="issues-content-2" class="canva-text leading-relaxed mb-4" style="color: rgb(148, 163, 184); font-weight: 400; font-style: normal; font-size: 16px;">Texture Bleeding happens when colors from one UV island "leak" into an adjacent island during mipmap generation (the process where the engine creates smaller versions of your texture for distant viewing). At lower mipmap levels, neighboring pixels get averaged — if two islands are too close, their colors bleed across. Fix: Always leave adequate padding between islands (minimum 4px at 2048, 2px at 1024). Fill padding areas with the edge color of the island ("edge padding" or "dilation").</p>
+     <p data-template-id="issues-content-3" class="canva-text leading-relaxed mb-4" style="color: rgb(148, 163, 184); font-weight: 400; font-style: normal; font-size: 16px;">Visible Seams appear as hard lines on the 3D model where UV islands split apart. Even if your texture painting is seamless, the vertices on both sides of a seam are reading from different texture locations — tiny mismatches in color/value create a visible line. Fix: (1) Hide seams in inconspicuous locations, (2) Use "Transfer Paint Across Seams" tools in your painting software, (3) In Substance Painter, painting in 3D view automatically handles cross-seam continuity.</p>
+     <p data-template-id="issues-content-4" class="canva-text leading-relaxed" style="color: rgb(167, 139, 250); font-weight: 400; font-style: normal; font-size: 16px;">Overlapping UVs are when multiple faces map to the same UV space. This is sometimes intentional (mirroring a symmetrical object to double your effective resolution) but often accidental — causing texture baking errors and lighting artifacts. Fix: Use Blender's "Select Overlapping" tool (UV Editor &gt; Select &gt; Overlapping) to find and separate accidental overlaps. For intentional overlaps (mirroring), remember you cannot bake unique lighting/AO onto overlapping areas — you'll need to unfold them for baking, then re-overlap afterward.</p>
+    </div>
+   </section><!-- TOOLS -->
+   <section class="fade-up">
+    <div data-template-id="tools-card" class="canva-card glass gradient-border rounded-2xl p-7" style="background: rgba(15, 15, 30, 0.6);">
+     <h3 data-template-id="tools-title" class="canva-text font-bold mb-4" style="color: rgb(6, 182, 212); font-weight: 700; font-style: normal; font-size: 20px;">🛠️ Tools &amp; Resources for This Week</h3>
+     <p data-template-id="tools-content-1" class="canva-text leading-relaxed mb-4" style="color: rgb(203, 213, 225); font-weight: 400; font-style: normal; font-size: 16px;">Blender (free, open source) — Our primary tool. The UV Editor workspace provides: Smart UV Project (automatic unwrap), manual seam marking (Ctrl+E &gt; Mark Seam), Live Unwrap mode for real-time feedback, Stretch overlay visualization, Pack Islands operator, and Average Islands Scale for consistent texel density. Recommended workflow: Select model → Tab to Edit Mode → Select edges for seams → Ctrl+E &gt; Mark Seam → Select All → U &gt; Unwrap → Adjust in UV Editor.</p>
+     <p data-template-id="tools-content-2" class="canva-text leading-relaxed" style="color: rgb(148, 163, 184); font-weight: 400; font-style: normal; font-size: 16px;">UV Mapping Demonstration Files (provided by instructor) — Pre-made .blend files containing: (1) A cube with checker texture for basic unwrapping practice, (2) A simple chair model for intermediate seam placement, (3) A complex prop for advanced layout challenges. Each file includes a UV checker grid texture that makes stretching and orientation immediately visible. Download from the LMS before lab.</p>
+    </div>
+   </section><!-- GROUP ACTIVITY -->
+   <section id="group-activity" class="fade-up">
+    <div data-template-id="group-card" class="canva-card glass gradient-border rounded-2xl p-7" style="background: rgba(15, 15, 30, 0.6);">
+     <h2 data-template-id="group-heading" class="canva-text font-bold mb-4" style="color: rgb(34, 197, 94); font-weight: 700; font-style: normal; font-size: 22px;">👥 Group Activity: "UV Seam Detective"</h2>
+     <p data-template-id="group-instruction" class="canva-text leading-relaxed mb-4" style="color: rgb(203, 213, 225); font-weight: 400; font-style: normal; font-size: 16px;">Form groups of 4-5 members. Your group will analyze UV layouts of real game assets and reverse-engineer the seam placement decisions made by professional artists. This trains your eye to think about where cuts should go before you even open Blender. Time: 30 minutes + 10 minutes presentation.</p>
+     <p data-template-id="group-task-1" class="canva-text leading-relaxed mb-3" style="color: rgb(148, 163, 184); font-weight: 400; font-style: normal; font-size: 16px;">Task 1: The instructor will display 6 different 3D models with their UV layouts visible side-by-side (a barrel, a sword, a crate, a character head, a vehicle tire, and a building pillar). For each model, your group must: (a) Identify all visible seam locations on the 3D view, (b) Explain WHY the artist chose those seam positions, (c) Rate the UV space utilization (poor/fair/good/excellent), (d) Identify any stretching issues you can spot.</p>
+     <p data-template-id="group-task-2" class="canva-text leading-relaxed mb-3" style="color: rgb(148, 163, 184); font-weight: 400; font-style: normal; font-size: 16px;">Task 2: For the character head model, propose an ALTERNATIVE seam placement that could work better. Draw your proposed seams on the provided worksheet (printed front/side/back views of the head). Justify each cut: Is it hidden? Does it follow a material boundary? Will it reduce stretching? Compare your proposal with at least one other group's solution — there is no single correct answer, only trade-offs.</p>
+     <p data-template-id="group-task-3" class="canva-text leading-relaxed mb-3" style="color: rgb(148, 163, 184); font-weight: 400; font-style: normal; font-size: 16px;">Task 3: UV Packing Challenge. The instructor provides a printout of 8 irregular UV island shapes (paper cutouts). Your group must physically arrange them within a square boundary (representing 0-1 UV space) achieving maximum coverage. Measure your coverage percentage using the grid overlay. The group with the highest coverage wins. This simulates the UV packing problem that software automates but artists must understand conceptually.</p>
+     <p data-template-id="group-deliverable" class="canva-text leading-relaxed mt-4" style="color: rgb(167, 139, 250); font-weight: 400; font-style: normal; font-size: 16px;">📌 Deliverable: Upload to LMS: (1) Completed analysis worksheet for all 6 models with seam markings and justifications, (2) Alternative head seam drawing with written reasoning, (3) Photo of your physical UV packing arrangement with measured coverage %. Grading: Analysis accuracy (40%), Alternative seam creativity &amp; reasoning (30%), Packing efficiency (20%), Presentation clarity (10%).</p>
+    </div>
+   </section><!-- INDIVIDUAL ACTIVITY -->
+   <section id="individual-activity" class="fade-up">
+    <div data-template-id="individual-card" class="canva-card glass gradient-border rounded-2xl p-7" style="background: rgba(15, 15, 30, 0.6);">
+     <h2 data-template-id="individual-heading" class="canva-text font-bold mb-4" style="color: rgb(245, 158, 11); font-weight: 700; font-style: normal; font-size: 22px;">📝 Individual Activity: "UV Mapping Your Environment"</h2>
+     <p data-template-id="individual-instruction" class="canva-text leading-relaxed mb-4" style="color: rgb(203, 213, 225); font-weight: 400; font-style: normal; font-size: 16px;">This activity develops your ability to mentally plan UV unwrapping before touching software. You'll analyze real-world objects and plan their UV seams on paper — a skill that saves enormous time during actual production. Time: Take-home, due next meeting.</p>
+     <p data-template-id="individual-task-1" class="canva-text leading-relaxed mb-3" style="color: rgb(148, 163, 184); font-weight: 400; font-style: normal; font-size: 16px;">Task 1: Choose THREE objects from your environment (one simple like a book/box, one medium like a mug/bottle, one complex like a shoe/backpack). Photograph each object from multiple angles (front, back, side, top, bottom — minimum 4 photos per object). Print or sketch a simplified version of each object's surface.</p>
+     <p data-template-id="individual-task-2" class="canva-text leading-relaxed mb-3" style="color: rgb(148, 163, 184); font-weight: 400; font-style: normal; font-size: 16px;">Task 2: On your sketches, draw where you would place UV seams using a red pen/marker. For each seam, write a brief annotation explaining: (a) Why this location? (b) Is it hidden from normal viewing angles? (c) Does it follow a natural material boundary? (d) What UV island will this seam create? Aim for the minimum seams needed to unwrap each object with minimal stretching.</p>
+     <p data-template-id="individual-task-3" class="canva-text leading-relaxed mb-3" style="color: rgb(148, 163, 184); font-weight: 400; font-style: normal; font-size: 16px;">Task 3: Draw a predicted UV layout for your complex object (the shoe/backpack). Sketch how you think the islands would look when flattened, and arrange them in a square representing UV space. Label each island ("front panel," "sole," "tongue," etc.). After completing the lab, compare your prediction to the actual Blender unwrap — write a reflection (150 words) on what you got right and what surprised you.</p>
+     <p data-template-id="individual-deliverable" class="canva-text leading-relaxed mt-4" style="color: rgb(167, 139, 250); font-weight: 400; font-style: normal; font-size: 16px;">📌 Deliverable: Submit PDF containing: (1) Photos of three objects (min 4 angles each), (2) Seam placement sketches with annotations for all three objects, (3) Predicted UV layout drawing for the complex object, (4) Post-lab reflection comparing prediction vs reality (150 words min). Grading: Photo documentation (10%), Seam placement logic (35%), UV layout prediction (30%), Reflection quality (25%).</p>
+    </div>
+   </section><!-- LABORATORY -->
+   <section id="laboratory" class="fade-up">
+    <div data-template-id="lab-card" class="canva-card glass gradient-border rounded-2xl p-7" style="background: rgba(15, 15, 30, 0.6);">
+     <h2 data-template-id="lab-heading" class="canva-text font-bold mb-4" style="color: rgb(6, 182, 212); font-weight: 700; font-style: normal; font-size: 22px;">🖥️ Laboratory Lesson (3 Hours)</h2>
+     <p data-template-id="lab-intro" class="canva-text leading-relaxed mb-5" style="color: rgb(203, 213, 225); font-weight: 400; font-style: normal; font-size: 16px;">This lab focuses on hands-on UV unwrapping in Blender. You'll start with a simple cube to understand the fundamentals, progress to a chair model with multiple parts, and finish with a UV layout analysis exercise. By the end, you'll produce a UV Layout Portfolio demonstrating your ability to create clean, efficient UV maps.</p><img data-template-id="lab-image" class="canva-image w-full h-48 object-cover rounded-xl mb-6" loading="lazy" src="https://images.pexels.com/photos/4348401/pexels-photo-4348401.jpeg?auto=compress&amp;cs=tinysrgb&amp;w=1280" alt="Artistic workspace featuring calligraphy and digital design on a tablet and laptop">
+     <h3 data-template-id="lab-part1-title" class="canva-text font-bold mb-2" style="color: rgb(248, 250, 252); font-weight: 700; font-style: normal; font-size: 19px;">Part 1: UV Unwrapping a Cube (45 min)</h3>
+     <p data-template-id="lab-part1-content" class="canva-text leading-relaxed mb-5 whitespace-pre-line" style="font-weight: 400; font-style: normal; font-size: 16px;">• Open the provided Week04_Cube.blend file (or create a default cube in Blender)
+• Apply the UV Checker Grid texture (provided) to the cube's material — this shows stretching and orientation instantly
+• Switch to UV Editing workspace (top menu bar)
+• Select the cube, enter Edit Mode (Tab)
+• First attempt — Auto unwrap: Select All (A) → U → Smart UV Project. Observe the result: How many islands? Any stretching?
+• Second attempt — Manual seams: Undo. Select specific edges that form a cross-shaped cut pattern. Ctrl+E → Mark Seam. Select All → U → Unwrap
+• Third attempt — T-shape unwrap: Clear seams, mark edges to create a T-shaped net (like an unfolded box). Unwrap and compare
+• For each method, screenshot the UV layout AND the 3D viewport showing the checker pattern
+• Annotate which method gives the least distortion and why
+• Challenge: Unwrap the cube so that ONE face gets 4x the UV space as the others (simulating a hero face on a crate that faces the player)</p>
+     <h3 data-template-id="lab-part2-title" class="canva-text font-bold mb-2" style="color: rgb(248, 250, 252); font-weight: 700; font-style: normal; font-size: 19px;">Part 2: UV Unwrapping a Chair (90 min)</h3>
+     <p data-template-id="lab-part2-content" class="canva-text leading-relaxed mb-5 whitespace-pre-line" style="font-weight: 400; font-style: normal; font-size: 16px;">• Open the provided Week04_Chair.blend file
+• Apply UV Checker Grid texture to the entire chair
+• Analyze the chair components: seat, backrest, four legs, possibly armrests
+• Plan your seams BEFORE marking them (refer to your individual activity sketches if applicable)
+• Strategy for legs: Since all four legs are identical, unwrap ONE leg, then overlap the other three legs' UVs on top — this gives 4x effective resolution
+• Strategy for seat: Mark seams along the bottom edge (hidden from camera). The seat top should be one clean island
+• Strategy for backrest: Seam along the back edge. Front face = priority island (largest UV space)
+• Unwrap section by section: Select leg faces → Unwrap → Arrange → Move to next part
+• Use "Average Islands Scale" to ensure consistent texel density across all parts
+• Pack all islands using Pack Islands operator (Ctrl+P in UV Editor), set margin to 0.005
+• Final check: Enable Stretch overlay — ensure everything is blue/green
+• Export UV layout as PNG: UV Editor → UV → Export UV Layout (2048×2048, black wireframe on white)</p>
+     <h3 data-template-id="lab-part3-title" class="canva-text font-bold mb-2" style="color: rgb(248, 250, 252); font-weight: 700; font-style: normal; font-size: 19px;">Part 3: UV Layout Analysis (45 min)</h3>
+     <p data-template-id="lab-part3-content" class="canva-text leading-relaxed mb-5 whitespace-pre-line" style="font-weight: 400; font-style: normal; font-size: 16px;">• Open the provided Week04_Analysis.blend file (contains a pre-unwrapped game prop with intentional errors)
+• Your task: Find and fix the following issues:
+  - Identify at least 2 areas with stretching (use Stretch overlay)
+  - Find overlapping UVs that shouldn't be overlapping (Select → Overlapping)
+  - Locate islands that are too close together (will cause bleeding)
+  - Find at least 1 island with inconsistent texel density
+• For each issue found:
+  - Screenshot the problem (annotate with text/arrows)
+  - Explain what causes the issue
+  - Fix it using appropriate technique (add seam, adjust UVs, repack)
+  - Screenshot the fixed version
+• Document your findings in a before/after comparison format
+• Write 2-3 sentences per fix explaining your reasoning</p>
+     <h3 data-template-id="lab-output-title" class="canva-text font-bold mb-2" style="color: rgb(34, 197, 94); font-weight: 700; font-style: normal; font-size: 19px;">📋 Laboratory Output — UV Layout Portfolio (Submit via LMS)</h3>
+     <p data-template-id="lab-output-content" class="canva-text leading-relaxed whitespace-pre-line" style="font-weight: 400; font-style: normal; font-size: 16px;">1. Cube Study: PDF with screenshots of all 3 unwrap methods + checker pattern views + annotations on best method (include hero face challenge)
+2. Chair UV Layout: Exported 2048×2048 UV layout PNG + .blend file with clean UVs. Must show: consistent texel density, overlapping legs for efficiency, proper padding between islands
+3. Analysis Report: PDF with before/after screenshots of each found issue, written explanations, and fixes applied. Minimum 4 issues identified and resolved
+4. Reflection: Brief write-up (100 words) on biggest UV mapping challenge you faced and how you solved it
+
+File naming: LastName_Week04_Lab_[item].png/.pdf/.blend
+All files zipped into: LastName_Week04_Lab.zip
+
+Grading: Cube study completeness (15%), Chair UV quality &amp; efficiency (40%), Analysis accuracy &amp; fixes (30%), Reflection (15%)</p>
+    </div>
+   </section><!-- QUIZ -->
+   <section id="quiz" class="fade-up">
+    <h2 data-template-id="quiz-heading" class="canva-text neon-glow mb-8" style="color: rgb(224, 231, 255); font-weight: 700; font-style: normal; font-size: 24px;">📋 Sample Quiz</h2>
+    <div class="space-y-5" id="quiz-container">
+     <div data-template-id="q1-card" class="canva-card glass rounded-2xl p-6" style="background: rgba(15, 15, 30, 0.6);">
+      <p data-template-id="q1-question" class="canva-text font-bold mb-4" style="color: rgb(248, 250, 252); font-weight: 400; font-style: normal; font-size: 16px;">1. What do the letters U and V represent in UV mapping?</p>
+      <div class="space-y-2" data-quiz="1" data-answer="b">
+       <div class="quiz-option rounded-xl px-4 py-3" data-choice="a">
+        <span data-template-id="q1-a" class="canva-text text-sm" style="color: rgb(203, 213, 225); font-weight: 400; font-style: normal; font-size: 16px;">A) Up and Vertical axes in 3D space</span>
+       </div>
+       <div class="quiz-option rounded-xl px-4 py-3" data-choice="b">
+        <span data-template-id="q1-b" class="canva-text text-sm" style="color: rgb(203, 213, 225); font-weight: 400; font-style: normal; font-size: 16px;">B) The horizontal and vertical axes of 2D texture space</span>
+       </div>
+       <div class="quiz-option rounded-xl px-4 py-3" data-choice="c">
+        <span data-template-id="q1-c" class="canva-text text-sm" style="color: rgb(203, 213, 225); font-weight: 400; font-style: normal; font-size: 16px;">C) Universal and Variable texture coordinates</span>
+       </div>
+       <div class="quiz-option rounded-xl px-4 py-3" data-choice="d">
+        <span data-template-id="q1-d" class="canva-text text-sm" style="color: rgb(203, 213, 225); font-weight: 400; font-style: normal; font-size: 16px;">D) Unreal and Virtual mapping dimensions</span>
+       </div>
+      </div>
+     </div>
+     <div data-template-id="q2-card" class="canva-card glass rounded-2xl p-6" style="background: rgba(15, 15, 30, 0.6);">
+      <p data-template-id="q2-question" class="canva-text font-bold mb-4" style="color: rgb(248, 250, 252); font-weight: 400; font-style: normal; font-size: 16px;">2. What is the primary purpose of placing seams on a 3D model?</p>
+      <div class="space-y-2" data-quiz="2" data-answer="c">
+       <div class="quiz-option rounded-xl px-4 py-3" data-choice="a">
+        <span data-template-id="q2-a" class="canva-text text-sm" style="color: rgb(203, 213, 225); font-weight: 400; font-style: normal; font-size: 16px;">A) To increase the polygon count</span>
+       </div>
+       <div class="quiz-option rounded-xl px-4 py-3" data-choice="b">
+        <span data-template-id="q2-b" class="canva-text text-sm" style="color: rgb(203, 213, 225); font-weight: 400; font-style: normal; font-size: 16px;">B) To add visual detail to the texture</span>
+       </div>
+       <div class="quiz-option rounded-xl px-4 py-3" data-choice="c">
+        <span data-template-id="q2-c" class="canva-text text-sm" style="color: rgb(203, 213, 225); font-weight: 400; font-style: normal; font-size: 16px;">C) To define where the mesh is cut for flattening into 2D UV islands</span>
+       </div>
+       <div class="quiz-option rounded-xl px-4 py-3" data-choice="d">
+        <span data-template-id="q2-d" class="canva-text text-sm" style="color: rgb(203, 213, 225); font-weight: 400; font-style: normal; font-size: 16px;">D) To mark areas that won't receive textures</span>
+       </div>
+      </div>
+     </div>
+     <div data-template-id="q3-card" class="canva-card glass rounded-2xl p-6" style="background: rgba(15, 15, 30, 0.6);">
+      <p data-template-id="q3-question" class="canva-text font-bold mb-4" style="color: rgb(248, 250, 252); font-weight: 400; font-style: normal; font-size: 16px;">3. What does "texel density" refer to?</p>
+      <div class="space-y-2" data-quiz="3" data-answer="a">
+       <div class="quiz-option rounded-xl px-4 py-3" data-choice="a">
+        <span data-template-id="q3-a" class="canva-text text-sm" style="color: rgb(203, 213, 225); font-weight: 400; font-style: normal; font-size: 16px;">A) The number of texture pixels covering a given area of the 3D model's surface</span>
+       </div>
+       <div class="quiz-option rounded-xl px-4 py-3" data-choice="b">
+        <span data-template-id="q3-b" class="canva-text text-sm" style="color: rgb(203, 213, 225); font-weight: 400; font-style: normal; font-size: 16px;">B) The total file size of the texture image</span>
+       </div>
+       <div class="quiz-option rounded-xl px-4 py-3" data-choice="c">
+        <span data-template-id="q3-c" class="canva-text text-sm" style="color: rgb(203, 213, 225); font-weight: 400; font-style: normal; font-size: 16px;">C) The number of UV islands in a layout</span>
+       </div>
+       <div class="quiz-option rounded-xl px-4 py-3" data-choice="d">
+        <span data-template-id="q3-d" class="canva-text text-sm" style="color: rgb(203, 213, 225); font-weight: 400; font-style: normal; font-size: 16px;">D) The polygon count per square meter of the model</span>
+       </div>
+      </div>
+     </div>
+     <div data-template-id="q4-card" class="canva-card glass rounded-2xl p-6" style="background: rgba(15, 15, 30, 0.6);">
+      <p data-template-id="q4-question" class="canva-text font-bold mb-4" style="color: rgb(248, 250, 252); font-weight: 400; font-style: normal; font-size: 16px;">4. What causes texture bleeding between UV islands?</p>
+      <div class="space-y-2" data-quiz="4" data-answer="d">
+       <div class="quiz-option rounded-xl px-4 py-3" data-choice="a">
+        <span data-template-id="q4-a" class="canva-text text-sm" style="color: rgb(203, 213, 225); font-weight: 400; font-style: normal; font-size: 16px;">A) Using too high a texture resolution</span>
+       </div>
+       <div class="quiz-option rounded-xl px-4 py-3" data-choice="b">
+        <span data-template-id="q4-b" class="canva-text text-sm" style="color: rgb(203, 213, 225); font-weight: 400; font-style: normal; font-size: 16px;">B) Having too many seams on the model</span>
+       </div>
+       <div class="quiz-option rounded-xl px-4 py-3" data-choice="c">
+        <span data-template-id="q4-c" class="canva-text text-sm" style="color: rgb(203, 213, 225); font-weight: 400; font-style: normal; font-size: 16px;">C) Applying the wrong shader type</span>
+       </div>
+       <div class="quiz-option rounded-xl px-4 py-3" data-choice="d">
+        <span data-template-id="q4-d" class="canva-text text-sm" style="color: rgb(203, 213, 225); font-weight: 400; font-style: normal; font-size: 16px;">D) Insufficient padding between islands when mipmaps average neighboring pixels</span>
+       </div>
+      </div>
+     </div>
+     <div data-template-id="q5-card" class="canva-card glass rounded-2xl p-6" style="background: rgba(15, 15, 30, 0.6);">
+      <p data-template-id="q5-question" class="canva-text font-bold mb-4" style="color: rgb(248, 250, 252); font-weight: 400; font-style: normal; font-size: 16px;">5. Why might you intentionally overlap UV islands for a symmetrical character model?</p>
+      <div class="space-y-2" data-quiz="5" data-answer="b">
+       <div class="quiz-option rounded-xl px-4 py-3" data-choice="a">
+        <span data-template-id="q5-a" class="canva-text text-sm" style="color: rgb(203, 213, 225); font-weight: 400; font-style: normal; font-size: 16px;">A) To create animation blend shapes</span>
+       </div>
+       <div class="quiz-option rounded-xl px-4 py-3" data-choice="b">
+        <span data-template-id="q5-b" class="canva-text text-sm" style="color: rgb(203, 213, 225); font-weight: 400; font-style: normal; font-size: 16px;">B) To double the effective texture resolution by sharing texture space between mirrored halves</span>
+       </div>
+       <div class="quiz-option rounded-xl px-4 py-3" data-choice="c">
+        <span data-template-id="q5-c" class="canva-text text-sm" style="color: rgb(203, 213, 225); font-weight: 400; font-style: normal; font-size: 16px;">C) To reduce the polygon count of the model</span>
+       </div>
+       <div class="quiz-option rounded-xl px-4 py-3" data-choice="d">
+        <span data-template-id="q5-d" class="canva-text text-sm" style="color: rgb(203, 213, 225); font-weight: 400; font-style: normal; font-size: 16px;">D) To make the model render faster in the game engine</span>
+       </div>
+      </div>
+     </div>
+    </div>
+    <div id="quiz-result" class="mt-8 text-center hidden">
+     <div class="inline-block glass rounded-2xl px-8 py-4">
+      <p class="text-2xl font-bold bg-gradient-to-r from-purple-400 to-cyan-400 bg-clip-text text-transparent">Score: <span id="score-display">0</span>/5</p>
+     </div>
+    </div>
+   </section>
+  </main>
+  <footer class="text-center py-10 border-t border-white/5">
+   <p data-template-id="footer-text" class="canva-text text-sm" style="color: rgb(100, 116, 139); font-weight: 400; font-style: normal; font-size: 16px;">© 2025 University of Perpetual Help System DALTA – Las Piñas | Texture and Mapping | Instructor: MKDB</p>
+  </footer>
+  <script src="/_sdk/editing_sdk.js"></script>
+  <script>
+        lucide.createIcons();
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+        }, { threshold: 0.1 });
+        document.querySelectorAll('.fade-up').forEach(el => observer.observe(el));
+
+        let answered = 0, score = 0;
+        document.querySelectorAll('[data-quiz]').forEach(group => {
+            const answer = group.dataset.answer;
+            group.querySelectorAll('.quiz-option').forEach(opt => {
+                opt.addEventListener('click', () => {
+                    if (group.classList.contains('answered')) return;
+                    group.classList.add('answered');
+                    if (opt.dataset.choice === answer) { opt.classList.add('correct'); score++; }
+                    else { opt.classList.add('wrong'); group.querySelector(`[data-choice="${answer}"]`).classList.add('correct'); }
+                    group.querySelectorAll('.quiz-option').forEach(o => o.classList.add('disabled'));
+                    if (++answered === 5) {
+                        document.getElementById('quiz-result').classList.remove('hidden');
+                        document.getElementById('score-display').textContent = score;
+                    }
+                });
+            });
+        });
+    </script>
+ <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a0d88885369e220f',t:'MTc4MTc2NzI0NS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script>
+</body></html>
