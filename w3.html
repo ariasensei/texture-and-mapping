@@ -1,0 +1,298 @@
+<!doctype html>
+<html lang="en"><head><script src="/_sdk/telemetry_sdk.js"></script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Week 3 - Color Theory for Texture Artists</title>
+  <script src="https://cdn.tailwindcss.com/3.4.17"></script>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700;900&amp;display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/lucide@0.263.0/dist/umd/lucide.min.js"></script>
+  <style>
+        body { font-family: 'DM Sans', sans-serif; }
+        .glass { background: rgba(255,255,255,0.03); backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,0.08); transition: all 0.3s ease; }
+        .glass:hover { border-color: rgba(139,92,246,0.3); transform: translateY(-2px); }
+        .gradient-border { position: relative; }
+        .gradient-border::before { content:''; position:absolute; inset:-1px; border-radius:inherit; padding:1px; background:linear-gradient(135deg,#8b5cf6,#06b6d4,#8b5cf6); -webkit-mask:linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0); mask:linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0); -webkit-mask-composite:xor; mask-composite:exclude; opacity:0.4; transition:opacity 0.3s; pointer-events:none; }
+        .gradient-border:hover::before { opacity:0.8; }
+        .neon-glow { text-shadow: 0 0 20px rgba(139,92,246,0.5), 0 0 60px rgba(139,92,246,0.2); }
+        .quiz-option { transition: all 0.2s; cursor: pointer; border: 1px solid rgba(139,92,246,0.2); background: rgba(139,92,246,0.05); }
+        .quiz-option:hover { border-color: rgba(139,92,246,0.6); background: rgba(139,92,246,0.12); transform: translateX(4px); }
+        .quiz-option.correct { border-color: #22c55e; background: rgba(34,197,94,0.15); }
+        .quiz-option.wrong { border-color: #ef4444; background: rgba(239,68,68,0.15); }
+        .quiz-option.disabled { pointer-events: none; opacity: 0.7; }
+        .fade-up { opacity: 0; transform: translateY(30px); transition: opacity 0.6s ease, transform 0.6s ease; }
+        .fade-up.visible { opacity: 1; transform: translateY(0); }
+        .floating-orb { position: absolute; border-radius: 50%; filter: blur(80px); animation: float 8s ease-in-out infinite; }
+        @keyframes float { 0%,100%{ transform: translateY(0) scale(1); } 50%{ transform: translateY(-20px) scale(1.05); } }
+        .step-num { width:32px; height:32px; display:inline-flex; align-items:center; justify-content:center; border-radius:50%; background: linear-gradient(135deg,#8b5cf6,#06b6d4); font-weight:700; font-size:14px; flex-shrink:0; }
+        .nav-pill { transition: all 0.2s; padding: 6px 14px; border-radius: 20px; }
+        .nav-pill:hover { background: rgba(139,92,246,0.15); color: #c4b5fd; }
+    </style>
+  <script src="/_sdk/data_sdk.js" type="text/javascript"></script>
+  <script src="/_sdk/resizing_sdk.js" type="text/javascript"></script>
+ </head>
+ <body data-template-id="__page-root" class="min-h-screen w-full text-slate-200" style="background: rgb(8, 8, 15);">
+  <header class="relative overflow-hidden min-h-[50vh] flex items-center justify-center">
+   <img data-template-id="hero-image" class="canva-image absolute inset-0 w-full h-full object-cover opacity-25" loading="lazy" src="https://images.pexels.com/photos/1749452/pexels-photo-1749452.jpeg" alt="Colorful makeup powders and brushes in an artistic flat lay composition.">
+   <div class="absolute inset-0 bg-gradient-to-b from-[#0a0a12]/80 via-[#0a0a12]/40 to-[#0a0a12]"></div>
+   <div class="floating-orb w-72 h-72 bg-purple-600/30 top-10 -left-20"></div>
+   <div class="floating-orb w-56 h-56 bg-cyan-500/20 bottom-10 right-10" style="animation-delay:-4s"></div>
+   <div class="relative z-10 px-6 py-20 text-center max-w-4xl mx-auto">
+    <p data-template-id="institution-label" class="canva-text text-xs uppercase tracking-[0.25em] mb-4 opacity-80" style="color: rgb(167, 139, 250); font-weight: 400; font-style: normal; font-size: 16px;">University of Perpetual Help System DALTA – Las Piñas
+Instructor: MKDB</p>
+    <h1 data-template-id="page-title" class="canva-text neon-glow leading-tight" style="color: rgb(255, 255, 255); font-weight: 900; font-style: normal; font-size: 42px;">Week 3: Color Theory for Texture Artists</h1>
+    <p data-template-id="page-subtitle" class="canva-text mt-4 text-lg opacity-90" style="color: rgb(196, 181, 253); font-weight: 400; font-style: normal; font-size: 16px;">Color Wheel • Color Harmony • Material Perception • Stylized vs Realistic</p>
+   </div>
+  </header>
+  <nav class="sticky top-0 z-50 bg-[#0a0a12]/90 backdrop-blur-xl border-b border-white/5 px-4 py-3 overflow-x-auto">
+   <div class="max-w-6xl mx-auto flex gap-2 text-sm text-slate-400 whitespace-nowrap">
+    <a href="#lecture" class="nav-pill">Lecture</a> <a href="#color-wheel" class="nav-pill">Color Wheel</a> <a href="#harmony" class="nav-pill">Harmony</a> <a href="#material" class="nav-pill">Material</a> <a href="#stylized" class="nav-pill">Stylized vs Real</a> <a href="#group-activity" class="nav-pill">Group</a> <a href="#individual-activity" class="nav-pill">Individual</a> <a href="#laboratory" class="nav-pill">Lab</a> <a href="#quiz" class="nav-pill">Quiz</a>
+   </div>
+  </nav>
+  <main class="max-w-5xl mx-auto px-4 py-12 space-y-14">
+   <!-- LECTURE INTRO -->
+   <section id="lecture" class="fade-up">
+    <h2 data-template-id="lecture-heading" class="canva-text neon-glow mb-8" style="color: rgb(224, 231, 255); font-weight: 700; font-style: normal; font-size: 24px;">📖 Lecture Content</h2>
+    <div data-template-id="intro-card" class="canva-card glass gradient-border rounded-2xl p-7 mb-6" style="background: rgba(15, 15, 30, 0.6);">
+     <h3 data-template-id="intro-title" class="canva-text font-bold mb-4" style="color: rgb(6, 182, 212); font-weight: 700; font-style: normal; font-size: 20px;">Why Color Theory Matters for Texture Artists</h3>
+     <p data-template-id="intro-content-1" class="canva-text leading-relaxed mb-4" style="color: rgb(203, 213, 225); font-weight: 400; font-style: normal; font-size: 16px;">Color theory is the foundation of how we perceive materials in both real life and digital art. As a texture artist, understanding color isn't just about making things "look pretty" — it's about making surfaces feel believable. A rusty metal pipe isn't just orange; it's a complex interplay of warm browns, dark reds, desaturated yellows, and cool blue-gray undertones where the original metal peeks through.</p>
+     <p data-template-id="intro-content-2" class="canva-text leading-relaxed mb-4" style="color: rgb(148, 163, 184); font-weight: 400; font-style: normal; font-size: 16px;">In game and film production, color decisions directly impact player/viewer emotion. Warm colors (reds, oranges) in environment textures create feelings of danger or comfort depending on saturation. Cool colors (blues, purples) suggest calm, technology, or isolation. A texture artist who understands these principles can reinforce narrative through surface color alone — without relying on lighting artists to "fix" flat, uninspired textures.</p>
+     <p data-template-id="intro-content-3" class="canva-text leading-relaxed" style="color: rgb(148, 163, 184); font-weight: 400; font-style: normal; font-size: 16px;">This week we'll cover the core principles: the color wheel structure, harmony schemes used in professional production, how materials in the real world exhibit specific color behaviors, and the critical differences between realistic and stylized color approaches. Tools for this week: Adobe Color (free online), Krita (free), and PowerPoint for presentations.</p>
+    </div>
+   </section><!-- COLOR WHEEL -->
+   <section id="color-wheel" class="fade-up">
+    <div data-template-id="wheel-card" class="canva-card glass gradient-border rounded-2xl p-7 mb-6" style="background: rgba(15, 15, 30, 0.6);">
+     <h3 data-template-id="wheel-title" class="canva-text font-bold mb-4" style="color: rgb(6, 182, 212); font-weight: 700; font-style: normal; font-size: 20px;">1. The Color Wheel</h3><img data-template-id="wheel-image" class="canva-image w-full h-48 object-cover rounded-xl mb-4" loading="lazy" src="https://images.pexels.com/photos/1212407/pexels-photo-1212407.jpeg" alt="Bright, colorful paints dripping creating a rainbow effect on a white background, symbolizing diversity and creativity.">
+     <p data-template-id="wheel-content-1" class="canva-text leading-relaxed mb-4" style="color: rgb(203, 213, 225); font-weight: 400; font-style: normal; font-size: 16px;">The color wheel is a circular arrangement of colors organized by their chromatic relationship. It was first developed by Sir Isaac Newton in 1666 when he wrapped the visible light spectrum into a circle. For texture artists, the wheel is your navigation tool — it tells you which colors work together, which clash, and which create visual tension.</p>
+     <p data-template-id="wheel-content-2" class="canva-text leading-relaxed mb-4" style="color: rgb(148, 163, 184); font-weight: 400; font-style: normal; font-size: 16px;">Primary Colors (Red, Yellow, Blue in traditional; Red, Green, Blue in digital/RGB): Cannot be created by mixing other colors. They form the foundation. Secondary Colors (Orange, Green, Violet): Created by mixing two primaries. Tertiary Colors (Red-Orange, Yellow-Green, Blue-Violet, etc.): Created by mixing a primary with an adjacent secondary. This gives us 12 positions on the standard wheel.</p>
+     <p data-template-id="wheel-content-3" class="canva-text leading-relaxed mb-4" style="color: rgb(148, 163, 184); font-weight: 400; font-style: normal; font-size: 16px;">Critical Properties for Texture Work:
+• Hue — The pure color itself (red, blue, green). This is the position on the wheel.
+• Saturation — How intense/vivid the color is. Full saturation = pure hue. Zero saturation = gray. Real-world materials are rarely fully saturated — a "red" brick is actually around 40-60% saturated.
+• Value (Brightness) — How light or dark the color is. This is the MOST important property for readable textures. If your values are wrong, no amount of pretty hues will save the texture.</p>
+     <p data-template-id="wheel-content-4" class="canva-text leading-relaxed" style="color: rgb(167, 139, 250); font-weight: 400; font-style: normal; font-size: 16px;">Realistic Example: Look at a wooden desk. The "brown" you see isn't one color — it contains warm yellows in highlights, reddish-browns in the midtones, and cool dark purples in the deepest grain shadows. A beginner might paint the entire desk one flat brown. A professional uses the color wheel to understand that shadows shift toward the complementary color (warm surfaces get cool shadows), creating rich, believable color variation.</p>
+    </div>
+   </section><!-- COLOR HARMONY -->
+   <section id="harmony" class="fade-up">
+    <div data-template-id="harmony-card" class="canva-card glass gradient-border rounded-2xl p-7 mb-6" style="background: rgba(15, 15, 30, 0.6);">
+     <h3 data-template-id="harmony-title" class="canva-text font-bold mb-4" style="color: rgb(6, 182, 212); font-weight: 700; font-style: normal; font-size: 20px;">2. Color Harmony</h3><img data-template-id="harmony-image" class="canva-image w-full h-48 object-cover rounded-xl mb-4" loading="lazy" src="https://images.pexels.com/photos/1762851/pexels-photo-1762851.jpeg" alt="Close-up of vibrant yellow and blue colored pencils on contrasting paper backgrounds.">
+     <p data-template-id="harmony-content-1" class="canva-text leading-relaxed mb-4" style="color: rgb(203, 213, 225); font-weight: 400; font-style: normal; font-size: 16px;">Color harmony refers to arrangements of colors that are aesthetically pleasing and create a sense of visual order. In texture art, harmony ensures your material palette feels intentional rather than random. Studios like Riot Games (Valorant), Blizzard (Overwatch), and miHoYo (Genshin Impact) all use strict color harmony rules for their asset palettes.</p>
+     <p data-template-id="harmony-content-2" class="canva-text leading-relaxed mb-4" style="color: rgb(148, 163, 184); font-weight: 400; font-style: normal; font-size: 16px;">Complementary — Colors directly opposite on the wheel (Red↔Green, Blue↔Orange, Yellow↔Purple). Creates maximum contrast and visual energy. Use case: A copper sword (warm orange) against a teal-patina accent (cool blue-green). The contrast makes both colors pop. Warning: Using complementary colors at equal saturation can vibrate painfully — always let one dominate (60-70%) and the other accent (30-40%).</p>
+     <p data-template-id="harmony-content-3" class="canva-text leading-relaxed mb-4" style="color: rgb(148, 163, 184); font-weight: 400; font-style: normal; font-size: 16px;">Analogous — 3 colors adjacent on the wheel (e.g., Yellow, Yellow-Green, Green). Creates calm, cohesive palettes. Use case: Forest environment textures — mossy greens, warm yellow-greens, and cool blue-greens. Everything feels unified. This is the safest harmony for beginners because it's almost impossible to make it look bad.</p>
+     <p data-template-id="harmony-content-4" class="canva-text leading-relaxed mb-4" style="color: rgb(148, 163, 184); font-weight: 400; font-style: normal; font-size: 16px;">Triadic — Three colors equally spaced (120° apart) on the wheel. Creates vibrant, balanced energy. Use case: Stylized game characters — a hero with a red cape, blue armor, and gold accents (Red, Blue, Yellow triadic). Split-Complementary — One base color + two colors adjacent to its complement. Offers contrast without the tension of pure complementary. Use case: A volcanic rock texture using deep red (base), with blue-green and yellow-green accent minerals.</p>
+     <p data-template-id="harmony-content-5" class="canva-text leading-relaxed" style="color: rgb(167, 139, 250); font-weight: 400; font-style: normal; font-size: 16px;">Professional Tip: In AAA game production, environment art teams create "color scripts" — documents showing the dominant palette for each level/area. Every texture artist on the team must paint within that palette. If the color script says "Act 2 Desert = warm oranges with cool purple shadows," every rock, sand, and building texture must follow that rule. Adobe Color (color.adobe.com) lets you generate harmony palettes instantly — use it as your starting point for every texture project.</p>
+    </div>
+   </section><!-- MATERIAL COLOR PERCEPTION -->
+   <section id="material" class="fade-up">
+    <div data-template-id="material-card" class="canva-card glass gradient-border rounded-2xl p-7 mb-6" style="background: rgba(15, 15, 30, 0.6);">
+     <h3 data-template-id="material-title" class="canva-text font-bold mb-4" style="color: rgb(6, 182, 212); font-weight: 700; font-style: normal; font-size: 20px;">3. Material Color Perception</h3><img data-template-id="material-image" class="canva-image w-full h-48 object-cover rounded-xl mb-4" loading="lazy" src="https://images.pexels.com/photos/6580549/pexels-photo-6580549.jpeg" alt="Assorted fabric and textile samples with color swatches for design inspiration.">
+     <p data-template-id="material-content-1" class="canva-text leading-relaxed mb-4" style="color: rgb(203, 213, 225); font-weight: 400; font-style: normal; font-size: 16px;">Different materials exhibit color in fundamentally different ways. Understanding this is what separates a texture that "looks like a photo slapped on a model" from one that genuinely reads as the intended material. Here are the key principles:</p>
+     <p data-template-id="material-content-2" class="canva-text leading-relaxed mb-4" style="color: rgb(148, 163, 184); font-weight: 400; font-style: normal; font-size: 16px;">Metals reflect their environment and have very narrow albedo value ranges. Gold is not "yellow" — its albedo is approximately RGB(255, 200, 50) at most. Silver/steel albedo is nearly white (200-230 range). Metals gain their color primarily from specular reflection, not diffuse color. A common beginner mistake is painting bright saturated gold in the albedo — this looks fake because real gold gets its luster from reflections, not base color.</p>
+     <p data-template-id="material-content-3" class="canva-text leading-relaxed mb-4" style="color: rgb(148, 163, 184); font-weight: 400; font-style: normal; font-size: 16px;">Wood varies enormously but follows predictable patterns: heartwood is darker and more saturated, sapwood is lighter. Grain lines are darker variations of the base hue (not black lines on brown). Aged/weathered wood shifts toward gray (desaturation) and may pick up green from moss/algae. A fresh-cut pine board might be RGB(210, 175, 120) while a 50-year-old barn plank might be RGB(140, 130, 125) — notice how saturation drops dramatically with age.</p>
+     <p data-template-id="material-content-4" class="canva-text leading-relaxed" style="color: rgb(148, 163, 184); font-weight: 400; font-style: normal; font-size: 16px;">Fabric absorbs and scatters light, making colors appear softer and less saturated than hard surfaces. Shadows on fabric are NOT just darker versions of the base color — they shift hue. Red fabric shadows go toward purple/crimson, blue fabric shadows go toward deep navy/violet. Highlights on fabric are low-saturation (nearly white for cotton, colored for silk/satin). Stone and concrete are extremely low-saturation (5-15%) with subtle warm or cool biases that reveal their mineral composition.</p>
+    </div>
+   </section><!-- STYLIZED VS REALISTIC -->
+   <section id="stylized" class="fade-up">
+    <div data-template-id="stylized-card" class="canva-card glass gradient-border rounded-2xl p-7 mb-6" style="background: rgba(15, 15, 30, 0.6);">
+     <h3 data-template-id="stylized-title" class="canva-text font-bold mb-4" style="color: rgb(6, 182, 212); font-weight: 700; font-style: normal; font-size: 20px;">4. Stylized vs Realistic Colors</h3><img data-template-id="stylized-image" class="canva-image w-full h-48 object-cover rounded-xl mb-4" loading="lazy" src="https://images.pexels.com/photos/13778984/pexels-photo-13778984.jpeg" alt="A dynamic abstract painting featuring vibrant colors and flowing shapes creating a sense of motion.">
+     <p data-template-id="stylized-content-1" class="canva-text leading-relaxed mb-4" style="color: rgb(203, 213, 225); font-weight: 400; font-style: normal; font-size: 16px;">Realistic textures aim to replicate how materials look in the physical world. The color palette is constrained by real-world observation: metals have specific albedo ranges, skin tones follow established color maps, environments match photographic reference. Games like The Last of Us Part II and Red Dead Redemption 2 use realistic palettes — muted, complex, with subtle color shifts.</p>
+     <p data-template-id="stylized-content-2" class="canva-text leading-relaxed mb-4" style="color: rgb(148, 163, 184); font-weight: 400; font-style: normal; font-size: 16px;">Stylized textures intentionally break reality for artistic effect. Colors can be pushed to higher saturation, hue-shifted for mood, or simplified into flat bands. Games like Fortnite, Zelda: Tears of the Kingdom, and Genshin Impact use stylized approaches — brighter, cleaner, with exaggerated color relationships. Key stylized techniques: (1) Pushing saturation 20-40% beyond reality, (2) Using complementary color in shadows instead of just darkening, (3) Hard-edged color transitions instead of smooth gradients, (4) Limited palette per asset (3-5 colors max).</p>
+     <p data-template-id="stylized-content-3" class="canva-text leading-relaxed mb-4" style="color: rgb(148, 163, 184); font-weight: 400; font-style: normal; font-size: 16px;">When to Use Each Approach:
+• Realistic: Architectural visualization, photorealistic games, film VFX, product rendering. You need color accuracy and physical correctness.
+• Stylized: Mobile games (cleaner reads at small screen sizes), cartoon/anime aesthetics, games targeting younger audiences, any project where "personality" matters more than "accuracy."
+• Hybrid: Many modern games blend both — realistic structure with slightly pushed saturation and artistic shadow colors (Horizon Zero Dawn, God of War).</p>
+     <p data-template-id="stylized-content-4" class="canva-text leading-relaxed" style="color: rgb(167, 139, 250); font-weight: 400; font-style: normal; font-size: 16px;">Practical Example: Painting a stone wall.
+• Realistic approach: Base gray RGB(160,155,150), shadows shift slightly blue RGB(130,130,140), highlights warm slightly RGB(180,175,165). Variation is subtle — maybe 10-15 units of hue shift.
+• Stylized approach: Base warm gray RGB(180,165,140), shadows push toward purple RGB(100,80,120), highlights pop toward warm yellow RGB(220,210,170). Variation is bold — 30-50 units of hue shift. Both are "correct" for their intended style.</p>
+    </div>
+   </section><!-- TOOLS -->
+   <section class="fade-up">
+    <div data-template-id="tools-card" class="canva-card glass gradient-border rounded-2xl p-7" style="background: rgba(15, 15, 30, 0.6);">
+     <h3 data-template-id="tools-title" class="canva-text font-bold mb-4" style="color: rgb(6, 182, 212); font-weight: 700; font-style: normal; font-size: 20px;">🛠️ Tools &amp; Resources for This Week</h3>
+     <p data-template-id="tools-content-1" class="canva-text leading-relaxed mb-4" style="color: rgb(203, 213, 225); font-weight: 400; font-style: normal; font-size: 16px;">Adobe Color (color.adobe.com) — Free browser-based tool. Use the Color Wheel to generate harmony palettes (complementary, analogous, triadic, etc.). Extract color themes from uploaded images. Save palettes to your Adobe library for use in Photoshop/Illustrator. This week you'll use it to create material-specific palettes.</p>
+     <p data-template-id="tools-content-2" class="canva-text leading-relaxed mb-4" style="color: rgb(148, 163, 184); font-weight: 400; font-style: normal; font-size: 16px;">Krita (free, open source) — Full digital painting application. Use for hand-painting stylized textures, creating color study boards, and experimenting with brush-based color mixing. Key features: advanced color selector with gamut masks, brush engine with color dynamics, layer blending modes for color experimentation.</p>
+     <p data-template-id="tools-content-3" class="canva-text leading-relaxed" style="color: rgb(148, 163, 184); font-weight: 400; font-style: normal; font-size: 16px;">PowerPoint — For documenting your color research, creating mood boards, and presenting group work. Also useful for quick color comparison layouts (place color swatches side-by-side). Blender — For testing your painted textures on 3D objects under different lighting to see how your color choices behave in context.</p>
+    </div>
+   </section><!-- GROUP ACTIVITY -->
+   <section id="group-activity" class="fade-up">
+    <div data-template-id="group-card" class="canva-card glass gradient-border rounded-2xl p-7" style="background: rgba(15, 15, 30, 0.6);">
+     <h2 data-template-id="group-heading" class="canva-text font-bold mb-4" style="color: rgb(34, 197, 94); font-weight: 700; font-style: normal; font-size: 22px;">👥 Group Activity: "Color Harmony Analysis Challenge"</h2>
+     <p data-template-id="group-instruction" class="canva-text leading-relaxed mb-4" style="color: rgb(203, 213, 225); font-weight: 400; font-style: normal; font-size: 16px;">Form groups of 4-5 members. Your group will analyze color usage in professional game textures and identify the harmony principles at work. This trains your eye to see intentional color decisions in production art. Time: 30 minutes + 10 minutes presentation.</p>
+     <p data-template-id="group-task-1" class="canva-text leading-relaxed mb-3" style="color: rgb(148, 163, 184); font-weight: 400; font-style: normal; font-size: 16px;">Task 1: The instructor will display 8 screenshots from different games (Genshin Impact, Valorant, Fortnite, Dark Souls, Zelda TOTK, The Last of Us, Overwatch, Minecraft). For each screenshot, your group must identify: (a) The dominant color harmony used (complementary, analogous, triadic, or split-complementary), (b) Whether the palette is realistic or stylized, (c) The approximate saturation level (low/medium/high), (d) What emotional mood the palette creates.</p>
+     <p data-template-id="group-task-2" class="canva-text leading-relaxed mb-3" style="color: rgb(148, 163, 184); font-weight: 400; font-style: normal; font-size: 16px;">Task 2: Using Adobe Color, recreate the palette from ONE of the displayed screenshots. Upload a reference image to Adobe Color's "Extract Theme" feature. Compare the auto-generated palette to what you identified manually. Are there colors you missed? Does the tool classify the harmony differently than your group did? Document discrepancies.</p>
+     <p data-template-id="group-task-3" class="canva-text leading-relaxed mb-3" style="color: rgb(148, 163, 184); font-weight: 400; font-style: normal; font-size: 16px;">Task 3: As a group, create an original 5-color palette for a fictional game environment assigned by the instructor (options: haunted forest, underwater temple, desert marketplace, space station, volcanic forge). Use a specific harmony rule. Present your palette with justification: Why this harmony? Why these saturation levels? What mood does it evoke? Show it applied to a simple shape in PowerPoint.</p>
+     <p data-template-id="group-deliverable" class="canva-text leading-relaxed mt-4" style="color: rgb(167, 139, 250); font-weight: 400; font-style: normal; font-size: 16px;">📌 Deliverable: Upload to LMS: (1) Completed analysis worksheet for all 8 screenshots, (2) Adobe Color palette screenshot with comparison notes, (3) Original palette presentation (PPT, max 3 slides). Grading: Analysis accuracy (40%), Adobe Color comparison quality (20%), Original palette creativity &amp; justification (30%), Presentation clarity (10%).</p>
+    </div>
+   </section><!-- INDIVIDUAL ACTIVITY -->
+   <section id="individual-activity" class="fade-up">
+    <div data-template-id="individual-card" class="canva-card glass gradient-border rounded-2xl p-7" style="background: rgba(15, 15, 30, 0.6);">
+     <h2 data-template-id="individual-heading" class="canva-text font-bold mb-4" style="color: rgb(245, 158, 11); font-weight: 700; font-style: normal; font-size: 22px;">📝 Individual Activity: "Material Color Study"</h2>
+     <p data-template-id="individual-instruction" class="canva-text leading-relaxed mb-4" style="color: rgb(203, 213, 225); font-weight: 400; font-style: normal; font-size: 16px;">This activity develops your ability to observe and replicate real-world material colors accurately. You'll photograph real materials and extract/document their true color properties — discovering that materials are never "one color." Time: Take-home, due next meeting.</p>
+     <p data-template-id="individual-task-1" class="canva-text leading-relaxed mb-3" style="color: rgb(148, 163, 184); font-weight: 400; font-style: normal; font-size: 16px;">Task 1: Photograph THREE different materials around your home or campus (choose from: wood, metal, fabric, stone, plastic, glass, food). Each photo must show the material under natural daylight. For each material, use an eyedropper tool (in Krita or any image editor) to sample 5 colors: darkest shadow, mid-shadow, midtone, highlight, and brightest highlight. Record the RGB values of each sample.</p>
+     <p data-template-id="individual-task-2" class="canva-text leading-relaxed mb-3" style="color: rgb(148, 163, 184); font-weight: 400; font-style: normal; font-size: 16px;">Task 2: In Krita or Adobe Color, create a color palette strip for each material (15 swatches total: 5 per material). Arrange them from darkest to lightest. Below each strip, write your observations: How much does the hue shift from shadow to highlight? What is the saturation range? Is the shadow warmer or cooler than the highlight? Compare your findings to the lecture notes on material color perception.</p>
+     <p data-template-id="individual-task-3" class="canva-text leading-relaxed mb-3" style="color: rgb(148, 163, 184); font-weight: 400; font-style: normal; font-size: 16px;">Task 3: Choose ONE of your three materials. In Krita, paint a simple 512×512 texture swatch that captures the color complexity you observed. Do NOT just use a flat fill — paint with at least 3-4 color variations you extracted. Apply this swatch to a basic shape in Blender (sphere or cube) and screenshot it under neutral lighting. Does it read as the intended material?</p>
+     <p data-template-id="individual-deliverable" class="canva-text leading-relaxed mt-4" style="color: rgb(167, 139, 250); font-weight: 400; font-style: normal; font-size: 16px;">📌 Deliverable: Submit PDF containing: (1) Three original photos with sample points marked, (2) Color palette strips with RGB values labeled, (3) Written color analysis per material (min 100 words each), (4) Krita texture swatch file (.kra + exported .png), (5) Blender screenshot. Grading: Photo quality &amp; variety (15%), Color accuracy (30%), Written analysis depth (25%), Texture swatch quality (20%), Blender application (10%).</p>
+    </div>
+   </section><!-- LABORATORY -->
+   <section id="laboratory" class="fade-up">
+    <div data-template-id="lab-card" class="canva-card glass gradient-border rounded-2xl p-7" style="background: rgba(15, 15, 30, 0.6);">
+     <h2 data-template-id="lab-heading" class="canva-text font-bold mb-4" style="color: rgb(6, 182, 212); font-weight: 700; font-style: normal; font-size: 22px;">🖥️ Laboratory Lesson (3 Hours)</h2>
+     <p data-template-id="lab-intro" class="canva-text leading-relaxed mb-5" style="color: rgb(203, 213, 225); font-weight: 400; font-style: normal; font-size: 16px;">This week's lab focuses on practical color application: creating harmonious palettes from scratch, painting a stylized surface using intentional color choices, and testing how your color decisions look on actual 3D geometry under various lighting conditions. You'll produce a Color Study Board and a Stylized Texture Sample.</p><img data-template-id="lab-image" class="canva-image w-full h-48 object-cover rounded-xl mb-6" loading="lazy" src="https://images.pexels.com/photos/4348401/pexels-photo-4348401.jpeg" alt="Artistic workspace featuring calligraphy and digital design on a tablet and laptop.">
+     <h3 data-template-id="lab-part1-title" class="canva-text font-bold mb-2" style="color: rgb(248, 250, 252); font-weight: 700; font-style: normal; font-size: 19px;">Part 1: Color Palette Creation (45 min)</h3>
+     <p data-template-id="lab-part1-content" class="canva-text leading-relaxed mb-5 whitespace-pre-line" style="font-weight: 400; font-style: normal; font-size: 16px;">• Open Adobe Color (color.adobe.com) in your browser
+• Create THREE palettes using different harmony rules:
+  - Palette A: Analogous scheme for a "forest moss" material
+  - Palette B: Complementary scheme for a "rusted iron" material
+  - Palette C: Triadic scheme for a "magical crystal" material
+• For each palette: start with a base color sampled from a reference photo, then let the harmony rule generate supporting colors
+• Adjust saturation and brightness to match realistic material ranges (refer to lecture notes)
+• Export/screenshot each palette with hex codes visible
+• In Krita, create a new 1024×512 canvas. Paint 5 rectangular swatches per palette (15 total), arranged in 3 rows
+• Label each row with the material name and harmony type
+• Save as "Color_Study_Board.png" — this is Lab Output #1</p>
+     <h3 data-template-id="lab-part2-title" class="canva-text font-bold mb-2" style="color: rgb(248, 250, 252); font-weight: 700; font-style: normal; font-size: 19px;">Part 2: Stylized Surface Painting (60 min)</h3>
+     <p data-template-id="lab-part2-content" class="canva-text leading-relaxed mb-5 whitespace-pre-line" style="font-weight: 400; font-style: normal; font-size: 16px;">• Choose ONE of these subjects: Stylized stone brick, Stylized wood plank, Stylized fabric/cloth
+• In Krita, create a new 512×512 canvas
+• Using ONLY colors from your Palette A, B, or C (pick the most appropriate), paint the surface:
+  - Start with a flat fill of your midtone color
+  - Add shadows using a hue-shifted darker color (NOT just a darker version of the same hue — shift toward complementary)
+  - Add highlights using a warmer, lighter variation
+  - Paint material details (grain for wood, mortar for brick, weave for fabric) using accent colors from your palette
+• Key stylized rules to follow:
+  - Maximum 5 colors in the final texture
+  - Visible brush strokes are OK (this is stylized, not photo-real)
+  - Push saturation 20-30% beyond what looks "real"
+  - Use hard edges between shadow and light (no smooth blending)
+• Test seamless tiling: Filters &gt; Map &gt; Make Seamless, then tile 3×3 to check
+• Save as "Stylized_Texture_Sample.png" — this is Lab Output #2</p>
+     <h3 data-template-id="lab-part3-title" class="canva-text font-bold mb-2" style="color: rgb(248, 250, 252); font-weight: 700; font-style: normal; font-size: 19px;">Part 3: Material Color Testing in Blender (75 min)</h3>
+     <p data-template-id="lab-part3-content" class="canva-text leading-relaxed mb-5 whitespace-pre-line" style="font-weight: 400; font-style: normal; font-size: 16px;">• Open Blender. Create a simple scene with 3 objects: a sphere, a cube, and a plane (floor)
+• Apply your Stylized Texture Sample to the sphere as the Base Color (albedo)
+• Apply one of your Color Study Board palettes as a flat-color material to the cube
+• Set up 3 different lighting scenarios and observe how your colors respond:
+  - Scenario 1: Neutral white key light (sun lamp, pure white, slight angle)
+  - Scenario 2: Warm golden hour light (sun lamp, RGB 255/220/150)
+  - Scenario 3: Cool moonlight (sun lamp, RGB 150/170/255)
+• For each scenario, take a screenshot and write 2-3 sentences:
+  - Do your colors still read as the intended material?
+  - Which lighting makes your palette look best/worst?
+  - Would you adjust your texture colors knowing how they respond to warm/cool light?
+• Bonus: Add a second point light with a complementary color to your key light. Observe how colored lighting creates color complexity on your texture automatically
+• Export all screenshots with annotations as PDF</p>
+     <h3 data-template-id="lab-output-title" class="canva-text font-bold mb-2" style="color: rgb(34, 197, 94); font-weight: 700; font-style: normal; font-size: 19px;">📋 Laboratory Output (Submit via LMS)</h3>
+     <p data-template-id="lab-output-content" class="canva-text leading-relaxed whitespace-pre-line" style="font-weight: 400; font-style: normal; font-size: 16px;">1. Color Study Board: 1024×512 PNG showing 3 labeled palettes (15 swatches) with hex codes
+2. Stylized Texture Sample: 512×512 PNG, seamless-tileable, painted using only your palette colors
+3. Blender Lighting Test: PDF with 3 lighting scenario screenshots + written observations (minimum 150 words total)
+4. Process Documentation: Brief write-up (100 words) explaining your color choices and harmony reasoning
+
+File naming: LastName_Week03_Lab_[item].png
+All files zipped into: LastName_Week03_Lab.zip
+
+Grading: Color Study Board accuracy (25%), Stylized Texture quality &amp; palette adherence (35%), Blender testing thoroughness (25%), Documentation clarity (15%)</p>
+    </div>
+   </section><!-- QUIZ -->
+   <section id="quiz" class="fade-up">
+    <h2 data-template-id="quiz-heading" class="canva-text neon-glow mb-8" style="color: rgb(224, 231, 255); font-weight: 700; font-style: normal; font-size: 24px;">📋 Sample Quiz</h2>
+    <div class="space-y-5" id="quiz-container">
+     <div data-template-id="q1-card" class="canva-card glass rounded-2xl p-6" style="background: rgba(15, 15, 30, 0.6);">
+      <p data-template-id="q1-question" class="canva-text font-bold mb-4" style="color: rgb(248, 250, 252); font-weight: 400; font-style: normal; font-size: 16px;">1. What are the three properties of color most important for texture artists?</p>
+      <div class="space-y-2" data-quiz="1" data-answer="b">
+       <div class="quiz-option rounded-xl px-4 py-3" data-choice="a"><span data-template-id="q1-a" class="canva-text text-sm" style="color: rgb(203, 213, 225); font-weight: 400; font-style: normal; font-size: 16px;">A) Red, Green, Blue</span>
+       </div>
+       <div class="quiz-option rounded-xl px-4 py-3" data-choice="b"><span data-template-id="q1-b" class="canva-text text-sm" style="color: rgb(203, 213, 225); font-weight: 400; font-style: normal; font-size: 16px;">B) Hue, Saturation, Value (Brightness)</span>
+       </div>
+       <div class="quiz-option rounded-xl px-4 py-3" data-choice="c"><span data-template-id="q1-c" class="canva-text text-sm" style="color: rgb(203, 213, 225); font-weight: 400; font-style: normal; font-size: 16px;">C) Cyan, Magenta, Yellow</span>
+       </div>
+       <div class="quiz-option rounded-xl px-4 py-3" data-choice="d"><span data-template-id="q1-d" class="canva-text text-sm" style="color: rgb(203, 213, 225); font-weight: 400; font-style: normal; font-size: 16px;">D) Warm, Cool, Neutral</span>
+       </div>
+      </div>
+     </div>
+     <div data-template-id="q2-card" class="canva-card glass rounded-2xl p-6" style="background: rgba(15, 15, 30, 0.6);">
+      <p data-template-id="q2-question" class="canva-text font-bold mb-4" style="color: rgb(248, 250, 252); font-weight: 400; font-style: normal; font-size: 16px;">2. Which color harmony uses colors directly opposite each other on the color wheel?</p>
+      <div class="space-y-2" data-quiz="2" data-answer="c">
+       <div class="quiz-option rounded-xl px-4 py-3" data-choice="a"><span data-template-id="q2-a" class="canva-text text-sm" style="color: rgb(203, 213, 225); font-weight: 400; font-style: normal; font-size: 16px;">A) Analogous</span>
+       </div>
+       <div class="quiz-option rounded-xl px-4 py-3" data-choice="b"><span data-template-id="q2-b" class="canva-text text-sm" style="color: rgb(203, 213, 225); font-weight: 400; font-style: normal; font-size: 16px;">B) Triadic</span>
+       </div>
+       <div class="quiz-option rounded-xl px-4 py-3" data-choice="c"><span data-template-id="q2-c" class="canva-text text-sm" style="color: rgb(203, 213, 225); font-weight: 400; font-style: normal; font-size: 16px;">C) Complementary</span>
+       </div>
+       <div class="quiz-option rounded-xl px-4 py-3" data-choice="d"><span data-template-id="q2-d" class="canva-text text-sm" style="color: rgb(203, 213, 225); font-weight: 400; font-style: normal; font-size: 16px;">D) Monochromatic</span>
+       </div>
+      </div>
+     </div>
+     <div data-template-id="q3-card" class="canva-card glass rounded-2xl p-6" style="background: rgba(15, 15, 30, 0.6);">
+      <p data-template-id="q3-question" class="canva-text font-bold mb-4" style="color: rgb(248, 250, 252); font-weight: 400; font-style: normal; font-size: 16px;">3. Why do metals appear different from non-metals in their albedo/diffuse map?</p>
+      <div class="space-y-2" data-quiz="3" data-answer="a">
+       <div class="quiz-option rounded-xl px-4 py-3" data-choice="a"><span data-template-id="q3-a" class="canva-text text-sm" style="color: rgb(203, 213, 225); font-weight: 400; font-style: normal; font-size: 16px;">A) Metals have very narrow albedo ranges and get their color mainly from specular reflection, not diffuse color</span>
+       </div>
+       <div class="quiz-option rounded-xl px-4 py-3" data-choice="b"><span data-template-id="q3-b" class="canva-text text-sm" style="color: rgb(203, 213, 225); font-weight: 400; font-style: normal; font-size: 16px;">B) Metals are always gray in the albedo map</span>
+       </div>
+       <div class="quiz-option rounded-xl px-4 py-3" data-choice="c"><span data-template-id="q3-c" class="canva-text text-sm" style="color: rgb(203, 213, 225); font-weight: 400; font-style: normal; font-size: 16px;">C) Metals use higher resolution textures</span>
+       </div>
+       <div class="quiz-option rounded-xl px-4 py-3" data-choice="d"><span data-template-id="q3-d" class="canva-text text-sm" style="color: rgb(203, 213, 225); font-weight: 400; font-style: normal; font-size: 16px;">D) Metals don't need albedo maps at all</span>
+       </div>
+      </div>
+     </div>
+     <div data-template-id="q4-card" class="canva-card glass rounded-2xl p-6" style="background: rgba(15, 15, 30, 0.6);">
+      <p data-template-id="q4-question" class="canva-text font-bold mb-4" style="color: rgb(248, 250, 252); font-weight: 400; font-style: normal; font-size: 16px;">4. In stylized texture painting, what is a key technique for shadows?</p>
+      <div class="space-y-2" data-quiz="4" data-answer="d">
+       <div class="quiz-option rounded-xl px-4 py-3" data-choice="a"><span data-template-id="q4-a" class="canva-text text-sm" style="color: rgb(203, 213, 225); font-weight: 400; font-style: normal; font-size: 16px;">A) Always use pure black for shadows</span>
+       </div>
+       <div class="quiz-option rounded-xl px-4 py-3" data-choice="b"><span data-template-id="q4-b" class="canva-text text-sm" style="color: rgb(203, 213, 225); font-weight: 400; font-style: normal; font-size: 16px;">B) Only darken the base color without changing hue</span>
+       </div>
+       <div class="quiz-option rounded-xl px-4 py-3" data-choice="c"><span data-template-id="q4-c" class="canva-text text-sm" style="color: rgb(203, 213, 225); font-weight: 400; font-style: normal; font-size: 16px;">C) Use fully saturated primary colors</span>
+       </div>
+       <div class="quiz-option rounded-xl px-4 py-3" data-choice="d"><span data-template-id="q4-d" class="canva-text text-sm" style="color: rgb(203, 213, 225); font-weight: 400; font-style: normal; font-size: 16px;">D) Shift the hue toward the complementary color instead of just darkening</span>
+       </div>
+      </div>
+     </div>
+     <div data-template-id="q5-card" class="canva-card glass rounded-2xl p-6" style="background: rgba(15, 15, 30, 0.6);">
+      <p data-template-id="q5-question" class="canva-text font-bold mb-4" style="color: rgb(248, 250, 252); font-weight: 400; font-style: normal; font-size: 16px;">5. What does an Analogous color harmony consist of?</p>
+      <div class="space-y-2" data-quiz="5" data-answer="b">
+       <div class="quiz-option rounded-xl px-4 py-3" data-choice="a"><span data-template-id="q5-a" class="canva-text text-sm" style="color: rgb(203, 213, 225); font-weight: 400; font-style: normal; font-size: 16px;">A) Three colors equally spaced 120° apart on the wheel</span>
+       </div>
+       <div class="quiz-option rounded-xl px-4 py-3" data-choice="b"><span data-template-id="q5-b" class="canva-text text-sm" style="color: rgb(203, 213, 225); font-weight: 400; font-style: normal; font-size: 16px;">B) Three colors adjacent to each other on the wheel</span>
+       </div>
+       <div class="quiz-option rounded-xl px-4 py-3" data-choice="c"><span data-template-id="q5-c" class="canva-text text-sm" style="color: rgb(203, 213, 225); font-weight: 400; font-style: normal; font-size: 16px;">C) One color plus its direct opposite</span>
+       </div>
+       <div class="quiz-option rounded-xl px-4 py-3" data-choice="d"><span data-template-id="q5-d" class="canva-text text-sm" style="color: rgb(203, 213, 225); font-weight: 400; font-style: normal; font-size: 16px;">D) Only different values of a single hue</span>
+       </div>
+      </div>
+     </div>
+    </div>
+    <div id="quiz-result" class="mt-8 text-center hidden">
+     <div class="inline-block glass rounded-2xl px-8 py-4">
+      <p class="text-2xl font-bold bg-gradient-to-r from-purple-400 to-cyan-400 bg-clip-text text-transparent">Score: <span id="score-display">0</span>/5</p>
+     </div>
+    </div>
+   </section>
+  </main>
+  <footer class="text-center py-10 border-t border-white/5">
+   <p data-template-id="footer-text" class="canva-text text-sm" style="color: rgb(100, 116, 139); font-weight: 400; font-style: normal; font-size: 16px;">© 2025 University of Perpetual Help System DALTA – Las Piñas | Texture and Mapping | Instructor: MKDB</p>
+  </footer>
+  <script src="/_sdk/editing_sdk.js"></script>
+  <script>
+        lucide.createIcons();
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+        }, { threshold: 0.1 });
+        document.querySelectorAll('.fade-up').forEach(el => observer.observe(el));
+
+        let answered = 0, score = 0;
+        document.querySelectorAll('[data-quiz]').forEach(group => {
+            const answer = group.dataset.answer;
+            group.querySelectorAll('.quiz-option').forEach(opt => {
+                opt.addEventListener('click', () => {
+                    if (group.classList.contains('answered')) return;
+                    group.classList.add('answered');
+                    if (opt.dataset.choice === answer) { opt.classList.add('correct'); score++; }
+                    else { opt.classList.add('wrong'); group.querySelector(`[data-choice="${answer}"]`).classList.add('correct'); }
+                    group.querySelectorAll('.quiz-option').forEach(o => o.classList.add('disabled'));
+                    if (++answered === 5) {
+                        document.getElementById('quiz-result').classList.remove('hidden');
+                        document.getElementById('score-display').textContent = score;
+                    }
+                });
+            });
+        });
+    </script>
+ <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a0d87643d3f104c6',t:'MTc4MTc2NjQ5OC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script>
+</body></html>
