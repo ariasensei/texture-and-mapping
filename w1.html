@@ -1,0 +1,294 @@
+<!doctype html>
+<html lang="en"><head><script src="/_sdk/telemetry_sdk.js"></script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Week 1 - Texture Mapping</title>
+  <script src="https://cdn.tailwindcss.com/3.4.17"></script>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700;900&amp;display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/lucide@0.263.0/dist/umd/lucide.min.js"></script>
+  <style>
+        body { font-family: 'DM Sans', sans-serif; }
+        .glass { background: rgba(255,255,255,0.03); backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,0.08); }
+        .glass:hover { border-color: rgba(139,92,246,0.3); transform: translateY(-2px); }
+        .glass { transition: all 0.3s ease; }
+        .gradient-border { position: relative; }
+        .gradient-border::before { content:''; position:absolute; inset:-1px; border-radius:inherit; padding:1px; background:linear-gradient(135deg,#8b5cf6,#06b6d4,#8b5cf6); -webkit-mask:linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0); mask:linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0); -webkit-mask-composite:xor; mask-composite:exclude; opacity:0.4; transition:opacity 0.3s; pointer-events:none; }
+        .gradient-border:hover::before { opacity:0.8; }
+        .neon-glow { text-shadow: 0 0 20px rgba(139,92,246,0.5), 0 0 60px rgba(139,92,246,0.2); }
+        .quiz-option { transition: all 0.2s; cursor: pointer; border: 1px solid rgba(139,92,246,0.2); background: rgba(139,92,246,0.05); }
+        .quiz-option:hover { border-color: rgba(139,92,246,0.6); background: rgba(139,92,246,0.12); transform: translateX(4px); }
+        .quiz-option.correct { border-color: #22c55e; background: rgba(34,197,94,0.15); }
+        .quiz-option.wrong { border-color: #ef4444; background: rgba(239,68,68,0.15); }
+        .quiz-option.disabled { pointer-events: none; opacity: 0.7; }
+        .fade-up { opacity: 0; transform: translateY(30px); transition: opacity 0.6s ease, transform 0.6s ease; }
+        .fade-up.visible { opacity: 1; transform: translateY(0); }
+        .floating-orb { position: absolute; border-radius: 50%; filter: blur(80px); animation: float 8s ease-in-out infinite; }
+        @keyframes float { 0%,100%{ transform: translateY(0) scale(1); } 50%{ transform: translateY(-20px) scale(1.05); } }
+        .step-num { width:32px; height:32px; display:inline-flex; align-items:center; justify-content:center; border-radius:50%; background: linear-gradient(135deg,#8b5cf6,#06b6d4); font-weight:700; font-size:14px; flex-shrink:0; }
+        .nav-pill { transition: all 0.2s; padding: 6px 14px; border-radius: 20px; }
+        .nav-pill:hover { background: rgba(139,92,246,0.15); color: #c4b5fd; }
+    </style>
+  <script src="/_sdk/data_sdk.js" type="text/javascript"></script>
+  <script src="/_sdk/resizing_sdk.js" type="text/javascript"></script>
+ </head>
+ <body data-template-id="__page-root" class="min-h-screen w-full text-slate-200" style="background: rgb(8, 8, 15);">
+  <!-- Hero -->
+  <header class="relative overflow-hidden min-h-[50vh] flex items-center justify-center">
+   <img data-template-id="hero-image" class="canva-image absolute inset-0 w-full h-full object-cover opacity-25" loading="lazy" src="canva://MAGr38oxpV8/1" alt="Dynamic abstract image featuring neon lights and geometric shapes in a futuristic style.">
+   <div class="absolute inset-0 bg-gradient-to-b from-[#0a0a12]/80 via-[#0a0a12]/40 to-[#0a0a12]"></div>
+   <div class="floating-orb w-72 h-72 bg-purple-600/30 top-10 -left-20"></div>
+   <div class="floating-orb w-56 h-56 bg-cyan-500/20 bottom-10 right-10" style="animation-delay:-4s"></div>
+   <div class="relative z-10 px-6 py-20 text-center max-w-4xl mx-auto">
+    <p data-template-id="institution-label" class="canva-text text-xs uppercase tracking-[0.25em] mb-4 opacity-80" style="color: rgb(167, 139, 250); font-weight: 400; font-style: normal; font-size: 16px;">University of Perpetual Help System DALTA – Las Piñas
+ Instructor: MKDB</p>
+    <h1 data-template-id="page-title" class="canva-text neon-glow leading-tight" style="color: rgb(255, 255, 255); font-weight: 900; font-style: normal; font-size: 42px;">Week 1: Course Orientation &amp; Introduction to Texture Mapping</h1>
+    <p data-template-id="page-subtitle" class="canva-text mt-4 text-lg opacity-90" style="color: rgb(196, 181, 253); font-weight: 400; font-style: normal; font-size: 16px;"></p>
+   </div>
+  </header><!-- Navigation -->
+  <nav class="sticky top-0 z-50 bg-[#0a0a12]/90 backdrop-blur-xl border-b border-white/5 px-4 py-3 overflow-x-auto">
+   <div class="max-w-6xl mx-auto flex gap-2 text-sm text-slate-400 whitespace-nowrap">
+    <a href="#lecture" class="nav-pill">Lecture</a> <a href="#pipeline" class="nav-pill">Pipeline</a> <a href="#applications" class="nav-pill">Applications</a> <a href="#group-activity" class="nav-pill">Group</a> <a href="#individual-activity" class="nav-pill">Individual</a> <a href="#laboratory" class="nav-pill">Lab</a> <a href="#quiz" class="nav-pill">Quiz</a>
+   </div>
+  </nav>
+  <main class="max-w-5xl mx-auto px-4 py-12 space-y-14">
+   <!-- LECTURE -->
+   <section id="lecture" class="fade-up">
+    <h2 data-template-id="lecture-heading" class="canva-text neon-glow mb-8" style="color: rgb(224, 231, 255); font-weight: 700; font-style: normal; font-size: 24px;">📖 Lecture Content</h2>
+    <div data-template-id="overview-card" class="canva-card glass gradient-border rounded-2xl p-7 mb-6" style="background: rgba(15, 15, 30, 0.6);">
+     <h3 data-template-id="overview-title" class="canva-text font-bold mb-4" style="color: rgb(6, 182, 212); font-weight: 700; font-style: normal; font-size: 20px;">1. Course Overview</h3>
+     <p data-template-id="overview-content" class="canva-text leading-relaxed mb-4" style="color: rgb(203, 213, 225); font-weight: 400; font-style: normal; font-size: 16px;">Welcome to Texture and Mapping! This 18-week course is designed to take you from zero texture knowledge to producing portfolio-ready, industry-standard textured 3D assets. You will learn how to wrap flat 2D images around 3D objects so they look realistic — the same technique used by AAA game studios like Ubisoft, Naughty Dog, and Rockstar Games.</p>
+     <p data-template-id="overview-content-2" class="canva-text leading-relaxed mb-4" style="color: rgb(148, 163, 184); font-weight: 400; font-style: normal; font-size: 16px;">Think of texture mapping like gift-wrapping a box: the wrapping paper (texture) must cover the box (3D model) without ugly seams or stretching. This course teaches you how to do that perfectly, every time, using professional tools like Blender and Substance Painter.</p>
+     <p data-template-id="overview-content-3" class="canva-text leading-relaxed" style="color: rgb(148, 163, 184); font-weight: 400; font-style: normal; font-size: 16px;">By the end of this course, you will have a complete portfolio containing textured game props, environmental assets, and character accessories — ready to show employers or clients in the game development, animation, and visualization industries.</p>
+    </div>
+    <div data-template-id="grading-card" class="canva-card glass gradient-border rounded-2xl p-7 mb-6" style="background: rgba(15, 15, 30, 0.6);">
+     <h3 data-template-id="grading-title" class="canva-text font-bold mb-4" style="color: rgb(6, 182, 212); font-weight: 700; font-style: normal; font-size: 20px;">2. Grading System</h3>
+     <p data-template-id="grading-content" class="canva-text leading-relaxed mb-4" style="color: rgb(203, 213, 225); font-weight: 400; font-style: normal; font-size: 16px;">Your grade in this course is based on practical output, not just exams. The industry values what you can produce, so our grading reflects that philosophy:</p>
+     <p data-template-id="grading-breakdown" class="canva-text leading-relaxed whitespace-pre-line" style="color: rgb(148, 163, 184); font-weight: 400; font-style: normal; font-size: 16px;">• Laboratory Outputs &amp; Exercises — 30%
+• Quizzes &amp; Written Exams — 15%
+• Midterm Project (Textured Environment Asset) — 20%
+• Final Project (Portfolio-Ready Game Asset) — 25%
+• Class Participation &amp; Attendance — 10%
+
+Note: Late submissions lose 10% per day. Plagiarized textures result in automatic failure of the assignment.</p>
+    </div>
+    <div data-template-id="intro-card" class="canva-card glass gradient-border rounded-2xl p-7" style="background: rgba(15, 15, 30, 0.6);">
+     <h3 data-template-id="intro-title" class="canva-text font-bold mb-4" style="color: rgb(6, 182, 212); font-weight: 700; font-style: normal; font-size: 20px;">3. Introduction to Texture Mapping</h3>
+     <p data-template-id="intro-content-1" class="canva-text leading-relaxed mb-4" style="color: rgb(203, 213, 225); font-weight: 400; font-style: normal; font-size: 16px;">Texture mapping is the process of applying a 2D image (called a texture or texture map) onto the surface of a 3D model. Without textures, all 3D objects would look like smooth, featureless clay. Textures give objects their visual identity — the grain of wood, the roughness of stone, the shine of metal, the pores on human skin.</p>
+     <p data-template-id="intro-content-2" class="canva-text leading-relaxed mb-4" style="color: rgb(148, 163, 184); font-weight: 400; font-style: normal; font-size: 16px;">How does it work? Every 3D model has a UV map — a flattened 2D representation of its surface, like unfolding a cardboard box into a flat sheet. The texture image is then painted or projected onto this flat UV layout. When the model is rendered, the engine wraps the texture back around the 3D shape using the UV coordinates as a guide.</p>
+     <p data-template-id="intro-content-3" class="canva-text leading-relaxed mb-4" style="color: rgb(148, 163, 184); font-weight: 400; font-style: normal; font-size: 16px;">Real-World Analogy: Imagine you want to decorate a basketball. You can't just slap a flat sticker on it — it would wrinkle and stretch. Instead, you'd need to carefully design the graphic knowing it will curve around a sphere. That's essentially what UV mapping solves for 3D artists.</p>
+     <p data-template-id="intro-example" class="canva-text leading-relaxed" style="color: rgb(167, 139, 250); font-weight: 400; font-style: normal; font-size: 16px;">Industry Example: In The Last of Us Part II, every brick wall, rusted pipe, and moss-covered surface you see is a carefully crafted texture mapped onto relatively simple geometry. The textures create the illusion of extreme detail without requiring millions of polygons.</p>
+    </div>
+   </section><!-- PIPELINE -->
+   <section id="pipeline" class="fade-up">
+    <div data-template-id="pipeline-card" class="canva-card glass gradient-border rounded-2xl p-7" style="background: rgba(15, 15, 30, 0.6);">
+     <h2 data-template-id="pipeline-heading" class="canva-text font-bold mb-4" style="color: rgb(6, 182, 212); font-weight: 700; font-style: normal; font-size: 20px;">4. Overview of the Texture Pipeline</h2>
+     <p data-template-id="pipeline-intro" class="canva-text leading-relaxed mb-5" style="color: rgb(203, 213, 225); font-weight: 400; font-style: normal; font-size: 16px;">The texture pipeline is the step-by-step workflow professional studios follow to create textures. Understanding this pipeline from Day 1 helps you organize your work like a professional:</p><img data-template-id="pipeline-image" class="canva-image w-full h-56 object-cover rounded-xl mb-6" loading="lazy" src="canva://MAE4c8syd-k/1" alt="A modern 3D abstract wireframe shape with a shiny reflective surface on a dark background.">
+     <div class="space-y-4">
+      <div class="flex gap-3 items-start"><span class="step-num">1</span>
+       <p data-template-id="pipeline-step-1" class="canva-text leading-relaxed" style="color: rgb(148, 163, 184); font-weight: 400; font-style: normal; font-size: 16px;">Reference Gathering — Collect real-world photos of the material you want to recreate. Example: If texturing a medieval wooden door, photograph 10-20 old wooden doors, noting grain direction, nail rust patterns, and paint peeling.</p>
+      </div>
+      <div class="flex gap-3 items-start"><span class="step-num">2</span>
+       <p data-template-id="pipeline-step-2" class="canva-text leading-relaxed" style="color: rgb(148, 163, 184); font-weight: 400; font-style: normal; font-size: 16px;">3D Modeling — Create or receive the 3D model that needs texturing. The model must have clean topology (well-organized polygons) for textures to wrap properly.</p>
+      </div>
+      <div class="flex gap-3 items-start"><span class="step-num">3</span>
+       <p data-template-id="pipeline-step-3" class="canva-text leading-relaxed" style="color: rgb(148, 163, 184); font-weight: 400; font-style: normal; font-size: 16px;">UV Unwrapping — Flatten the 3D model's surface into 2D space. This is like peeling an orange and laying the skin flat. You decide where to place seams (cuts) so they're hidden from the camera.</p>
+      </div>
+      <div class="flex gap-3 items-start"><span class="step-num">4</span>
+       <p data-template-id="pipeline-step-4" class="canva-text leading-relaxed" style="color: rgb(148, 163, 184); font-weight: 400; font-style: normal; font-size: 16px;">Texture Creation — Paint or generate the actual texture maps (color, roughness, normal, metallic). Tools: Substance Painter for painting directly on the 3D model, or Photoshop/GIMP for flat 2D editing.</p>
+      </div>
+      <div class="flex gap-3 items-start"><span class="step-num">5</span>
+       <p data-template-id="pipeline-step-5" class="canva-text leading-relaxed" style="color: rgb(148, 163, 184); font-weight: 400; font-style: normal; font-size: 16px;">Integration &amp; Review — Apply textures to the model in the game engine or renderer. Check for stretching, seam visibility, and correct material response under different lighting conditions. Iterate until perfect.</p>
+      </div>
+     </div>
+    </div>
+   </section><!-- APPLICATIONS -->
+   <section id="applications" class="fade-up">
+    <h2 data-template-id="apps-heading" class="canva-text neon-glow mb-8" style="color: rgb(224, 231, 255); font-weight: 700; font-style: normal; font-size: 24px;">5. Applications of Texture Mapping</h2>
+    <div class="grid md:grid-cols-3 gap-5">
+     <div data-template-id="app-games-card" class="canva-card glass gradient-border rounded-2xl overflow-hidden" style="background: rgba(15, 15, 30, 0.6);">
+      <img data-template-id="app-games-image" class="canva-image w-full h-40 object-cover" loading="lazy" src="canva://MAG_bDFG3l0/1" alt="A surreal CGI depiction of a floating island with lush greenery and a butterfly.">
+      <div class="p-5">
+       <h3 data-template-id="app-games-title" class="canva-text font-bold mb-2" style="color: rgb(248, 250, 252); font-weight: 700; font-style: normal; font-size: 19px;">🎮 Games</h3>
+       <p data-template-id="app-games-desc" class="canva-text text-sm leading-relaxed" style="color: rgb(148, 163, 184); font-weight: 400; font-style: normal; font-size: 16px;">Every surface in modern games uses texture maps. From Fortnite's stylized weapon skins to Elden Ring's weathered stone castles, textures define the visual identity. Game textures must be optimized — small file sizes but high visual impact, because thousands of textures load simultaneously.</p>
+      </div>
+     </div>
+     <div data-template-id="app-animation-card" class="canva-card glass gradient-border rounded-2xl overflow-hidden" style="background: rgba(15, 15, 30, 0.6);">
+      <img data-template-id="app-animation-image" class="canva-image w-full h-40 object-cover" loading="lazy" src="https://images.pexels.com/photos/11798029/pexels-photo-11798029.jpeg" alt="Colorful 3D character holding a blank cardboard sign on purple background. Fun and conceptual artwork.">
+      <div class="p-5">
+       <h3 data-template-id="app-animation-title" class="canva-text font-bold mb-2" style="color: rgb(248, 250, 252); font-weight: 700; font-style: normal; font-size: 19px;">🎬 Animation &amp; Film</h3>
+       <p data-template-id="app-animation-desc" class="canva-text text-sm leading-relaxed" style="color: rgb(148, 163, 184); font-weight: 400; font-style: normal; font-size: 16px;">Pixar and DreamWorks use texture mapping on every character and environment. In movies like Toy Story, Woody's fabric texture, Buzz's plastic sheen, and the carpet fibers are all texture maps. Film textures can be extremely high-resolution (8K+) since they render offline, not in real-time.</p>
+      </div>
+     </div>
+     <div data-template-id="app-viz-card" class="canva-card glass gradient-border rounded-2xl overflow-hidden" style="background: rgba(15, 15, 30, 0.6);">
+      <img data-template-id="app-viz-image" class="canva-image w-full h-40 object-cover" loading="lazy" src="https://images.pexels.com/photos/10522287/pexels-photo-10522287.jpeg" alt="Peaceful interior with arches overlooking a tranquil desert landscape and minimalist furniture.">
+      <div class="p-5">
+       <h3 data-template-id="app-viz-title" class="canva-text font-bold mb-2" style="color: rgb(248, 250, 252); font-weight: 700; font-style: normal; font-size: 19px;">🏗️ Visualization</h3>
+       <p data-template-id="app-viz-desc" class="canva-text text-sm leading-relaxed" style="color: rgb(148, 163, 184); font-weight: 400; font-style: normal; font-size: 16px;">Architects use texture mapping to show clients realistic renders of buildings before construction. Interior designers texture furniture, walls, and floors. Product designers texture prototypes (shoes, electronics, cars) for marketing materials — all before manufacturing a single physical item.</p>
+      </div>
+     </div>
+    </div>
+   </section><!-- GROUP ACTIVITY -->
+   <section id="group-activity" class="fade-up">
+    <div data-template-id="group-card" class="canva-card glass gradient-border rounded-2xl p-7" style="background: rgba(15, 15, 30, 0.6);">
+     <h2 data-template-id="group-heading" class="canva-text font-bold mb-4" style="color: rgb(34, 197, 94); font-weight: 700; font-style: normal; font-size: 22px;">👥 Group Activity: "Texture Detective"</h2>
+     <p data-template-id="group-instruction" class="canva-text leading-relaxed mb-4" style="color: rgb(203, 213, 225); font-weight: 400; font-style: normal; font-size: 16px;">Form groups of 4-5 members. Your group will become "Texture Detectives" investigating how textures are used in real products. Time: 30 minutes + 10 minutes presentation.</p>
+     <p data-template-id="group-task-1" class="canva-text leading-relaxed mb-3" style="color: rgb(148, 163, 184); font-weight: 400; font-style: normal; font-size: 16px;">Task 1: Choose one game, animated film, OR architectural visualization project your group is familiar with (e.g., Genshin Impact, Spider-Verse, a condo marketing video). Research 3 specific scenes/assets.</p>
+     <p data-template-id="group-task-2" class="canva-text leading-relaxed mb-3" style="color: rgb(148, 163, 184); font-weight: 400; font-style: normal; font-size: 16px;">Task 2: For each asset, identify: What material is being represented? (wood, metal, fabric, skin) How realistic or stylized is it? Could you spot any texture seams or repetition? What maps do you think were used (color, bump, reflection)?</p>
+     <p data-template-id="group-task-3" class="canva-text leading-relaxed mb-3" style="color: rgb(148, 163, 184); font-weight: 400; font-style: normal; font-size: 16px;">Task 3: Create a simple presentation (3-5 slides using Canva or Google Slides) showing screenshots of the textures you found, with annotations pointing out interesting details. Present to the class.</p>
+     <p data-template-id="group-deliverable" class="canva-text leading-relaxed mt-4" style="color: rgb(167, 139, 250); font-weight: 400; font-style: normal; font-size: 16px;">📌 Deliverable: Upload your group's presentation to Google Classroom/Moodle. Each member must contribute at least 1 annotated screenshot. Grading: Accuracy of identification (40%), Quality of annotation (30%), Presentation clarity (30%).</p>
+    </div>
+   </section><!-- INDIVIDUAL ACTIVITY -->
+   <section id="individual-activity" class="fade-up">
+    <div data-template-id="individual-card" class="canva-card glass gradient-border rounded-2xl p-7" style="background: rgba(15, 15, 30, 0.6);">
+     <h2 data-template-id="individual-heading" class="canva-text font-bold mb-4" style="color: rgb(245, 158, 11); font-weight: 700; font-style: normal; font-size: 22px;">📝 Individual Activity: "My Texture World"</h2>
+     <p data-template-id="individual-instruction" class="canva-text leading-relaxed mb-4" style="color: rgb(203, 213, 225); font-weight: 400; font-style: normal; font-size: 16px;">This activity helps you start seeing textures everywhere in the real world — a critical skill for any texture artist. Time: Take-home, due next meeting.</p>
+     <p data-template-id="individual-task-1" class="canva-text leading-relaxed mb-3" style="color: rgb(148, 163, 184); font-weight: 400; font-style: normal; font-size: 16px;">Task 1: Using your phone camera, photograph 5 different real-world textures around your home, campus, or neighborhood. Examples: cracked sidewalk concrete, rusty gate metal, tree bark, woven fabric on a chair, tiled bathroom floor.</p>
+     <p data-template-id="individual-task-2" class="canva-text leading-relaxed mb-3" style="color: rgb(148, 163, 184); font-weight: 400; font-style: normal; font-size: 16px;">Task 2: For each photo, write a short description (2-3 sentences): What material is it? What makes it visually interesting? How would you recreate this in 3D — would you paint it by hand or use a photo-based approach?</p>
+     <p data-template-id="individual-task-3" class="canva-text leading-relaxed mb-3" style="color: rgb(148, 163, 184); font-weight: 400; font-style: normal; font-size: 16px;">Task 3: Compile your 5 photos and descriptions into a single document (PDF or Google Doc). Title it: "[Your Name] – Week 1 Texture Observation Journal".</p>
+     <p data-template-id="individual-deliverable" class="canva-text leading-relaxed mt-4" style="color: rgb(167, 139, 250); font-weight: 400; font-style: normal; font-size: 16px;">📌 Deliverable: Submit via LMS before next class. Grading: Variety of textures chosen (30%), Quality of observation/description (40%), Photo clarity (30%). Bonus: Include 1 texture from a game screenshot and compare it to the real-world version.</p>
+    </div>
+   </section><!-- LABORATORY -->
+   <section id="laboratory" class="fade-up">
+    <div data-template-id="lab-card" class="canva-card glass gradient-border rounded-2xl p-7" style="background: rgba(15, 15, 30, 0.6);">
+     <h2 data-template-id="lab-heading" class="canva-text font-bold mb-4" style="color: rgb(6, 182, 212); font-weight: 700; font-style: normal; font-size: 22px;">🖥️ Laboratory Lesson (3 Hours)</h2>
+     <p data-template-id="lab-intro" class="canva-text leading-relaxed mb-5" style="color: rgb(203, 213, 225); font-weight: 400; font-style: normal; font-size: 16px;">Today's lab focuses on getting your workstation ready and becoming comfortable with Blender's interface. By the end of this session, you should be able to navigate Blender's 3D viewport confidently and understand where texture-related tools live.</p><img data-template-id="lab-image" class="canva-image w-full h-48 object-cover rounded-xl mb-6" loading="lazy" src="canva://MAGlIrqxOfg/1" alt="A stylish programmer's workspace featuring illuminated keyboards and multiple screens displaying code.">
+     <h3 data-template-id="lab-part1-title" class="canva-text font-bold mb-2" style="color: rgb(248, 250, 252); font-weight: 700; font-style: normal; font-size: 19px;">Part 1: Software Installation (45 min)</h3>
+     <p data-template-id="lab-part1-content" class="canva-text leading-relaxed mb-5 whitespace-pre-line" style="color: rgb(148, 163, 184); font-weight: 400; font-style: normal; font-size: 16px;">• Download and install Blender 4.x from blender.org (free)
+• Download and install GIMP from gimp.org (free Photoshop alternative)
+• Download and install Krita from krita.org (free digital painting)
+• Verify all three open correctly
+• Take a screenshot of each program's splash screen as proof of installation
+• Organize a dedicated folder: Documents &gt; TextureMapping &gt; Week01</p>
+     <h3 data-template-id="lab-part2-title" class="canva-text font-bold mb-2" style="color: rgb(248, 250, 252); font-weight: 700; font-style: normal; font-size: 19px;">Part 2: Blender Interface Familiarization (75 min)</h3>
+     <p data-template-id="lab-part2-content" class="canva-text leading-relaxed mb-5 whitespace-pre-line" style="color: rgb(148, 163, 184); font-weight: 400; font-style: normal; font-size: 16px;">• Learn the default layout: 3D Viewport, Outliner, Properties panel, Timeline
+• Practice viewport navigation: Middle-click to orbit, Scroll to zoom, Shift+Middle-click to pan
+• Switch between Object Mode and Edit Mode (Tab key)
+• Explore workspace tabs: Layout, Modeling, Sculpting, UV Editing, Texture Paint, Shading
+• Add a simple cube and apply a basic material (Principled BSDF)
+• Switch to Material Preview mode (Z key &gt; Material Preview) to see how materials look in real-time
+• Experiment with changing Base Color — this is your first "texture" interaction!</p>
+     <h3 data-template-id="lab-part3-title" class="canva-text font-bold mb-2" style="color: rgb(248, 250, 252); font-weight: 700; font-style: normal; font-size: 19px;">Part 3: Exploring Material Preview (60 min)</h3>
+     <p data-template-id="lab-part3-content" class="canva-text leading-relaxed mb-5 whitespace-pre-line" style="color: rgb(148, 163, 184); font-weight: 400; font-style: normal; font-size: 16px;">• Open the Shader Editor workspace
+• Observe the Principled BSDF node — this is the foundation of all PBR materials
+• Change Base Color to different solid colors and observe the 3D viewport updating
+• Adjust Roughness slider: 0 = mirror-like, 1 = completely matte. Compare how a metal ball looks at 0.1 vs 0.9 roughness
+• Adjust Metallic slider: 0 = plastic/wood, 1 = pure metal. Notice how reflections change
+• Take screenshots showing: (a) Low roughness shiny object, (b) High roughness matte object, (c) Metallic vs non-metallic comparison</p>
+     <h3 data-template-id="lab-output-title" class="canva-text font-bold mb-2" style="color: rgb(34, 197, 94); font-weight: 700; font-style: normal; font-size: 19px;">📋 Laboratory Output (Submit via LMS)</h3>
+     <p data-template-id="lab-output-content" class="canva-text leading-relaxed whitespace-pre-line" style="color: rgb(148, 163, 184); font-weight: 400; font-style: normal; font-size: 16px;">1. Screenshot documentation of all three installed software (Blender, GIMP, Krita) — 3 screenshots minimum
+2. Blender Interface Exploration Worksheet: Fill out the provided worksheet identifying the location of these tools: 3D Viewport, Outliner, Properties Panel, Shader Editor, UV Editor, Material Preview toggle
+3. Material Preview Screenshots: 3 screenshots showing different Roughness/Metallic combinations
+
+File naming convention: LastName_Week01_Lab_[item].png</p>
+    </div>
+   </section><!-- QUIZ -->
+   <section id="quiz" class="fade-up">
+    <h2 data-template-id="quiz-heading" class="canva-text neon-glow mb-8" style="color: rgb(224, 231, 255); font-weight: 700; font-style: normal; font-size: 24px;">📋 Sample Quiz</h2>
+    <div class="space-y-5" id="quiz-container">
+     <div data-template-id="q1-card" class="canva-card glass rounded-2xl p-6" style="background: rgba(15, 15, 30, 0.6);">
+      <p data-template-id="q1-question" class="canva-text font-bold mb-4" style="color: rgb(248, 250, 252); font-weight: 400; font-style: normal; font-size: 16px;">1. What is texture mapping?</p>
+      <div class="space-y-2" data-quiz="1" data-answer="b">
+       <div class="quiz-option rounded-xl px-4 py-3" data-choice="a"><span data-template-id="q1-a" class="canva-text text-sm" style="color: rgb(203, 213, 225); font-weight: 400; font-style: normal; font-size: 16px;">A) Creating 3D models from scratch</span>
+       </div>
+       <div class="quiz-option rounded-xl px-4 py-3" data-choice="b"><span data-template-id="q1-b" class="canva-text text-sm" style="color: rgb(203, 213, 225); font-weight: 400; font-style: normal; font-size: 16px;">B) Applying a 2D image onto the surface of a 3D model</span>
+       </div>
+       <div class="quiz-option rounded-xl px-4 py-3" data-choice="c"><span data-template-id="q1-c" class="canva-text text-sm" style="color: rgb(203, 213, 225); font-weight: 400; font-style: normal; font-size: 16px;">C) Animating objects in a 3D scene</span>
+       </div>
+       <div class="quiz-option rounded-xl px-4 py-3" data-choice="d"><span data-template-id="q1-d" class="canva-text text-sm" style="color: rgb(203, 213, 225); font-weight: 400; font-style: normal; font-size: 16px;">D) Rendering a final image from a 3D scene</span>
+       </div>
+      </div>
+     </div>
+     <div data-template-id="q2-card" class="canva-card glass rounded-2xl p-6" style="background: rgba(15, 15, 30, 0.6);">
+      <p data-template-id="q2-question" class="canva-text font-bold mb-4" style="color: rgb(248, 250, 252); font-weight: 400; font-style: normal; font-size: 16px;">2. What is a UV map?</p>
+      <div class="space-y-2" data-quiz="2" data-answer="c">
+       <div class="quiz-option rounded-xl px-4 py-3" data-choice="a"><span data-template-id="q2-a" class="canva-text text-sm" style="color: rgb(203, 213, 225); font-weight: 400; font-style: normal; font-size: 16px;">A) A type of light source in Blender</span>
+       </div>
+       <div class="quiz-option rounded-xl px-4 py-3" data-choice="b"><span data-template-id="q2-b" class="canva-text text-sm" style="color: rgb(203, 213, 225); font-weight: 400; font-style: normal; font-size: 16px;">B) A camera angle setting</span>
+       </div>
+       <div class="quiz-option rounded-xl px-4 py-3" data-choice="c"><span data-template-id="q2-c" class="canva-text text-sm" style="color: rgb(203, 213, 225); font-weight: 400; font-style: normal; font-size: 16px;">C) A flattened 2D representation of a 3D model's surface</span>
+       </div>
+       <div class="quiz-option rounded-xl px-4 py-3" data-choice="d"><span data-template-id="q2-d" class="canva-text text-sm" style="color: rgb(203, 213, 225); font-weight: 400; font-style: normal; font-size: 16px;">D) A file format for exporting textures</span>
+       </div>
+      </div>
+     </div>
+     <div data-template-id="q3-card" class="canva-card glass rounded-2xl p-6" style="background: rgba(15, 15, 30, 0.6);">
+      <p data-template-id="q3-question" class="canva-text font-bold mb-4" style="color: rgb(248, 250, 252); font-weight: 400; font-style: normal; font-size: 16px;">3. Which step comes FIRST in the texture pipeline?</p>
+      <div class="space-y-2" data-quiz="3" data-answer="a">
+       <div class="quiz-option rounded-xl px-4 py-3" data-choice="a"><span data-template-id="q3-a" class="canva-text text-sm" style="color: rgb(203, 213, 225); font-weight: 400; font-style: normal; font-size: 16px;">A) Reference Gathering</span>
+       </div>
+       <div class="quiz-option rounded-xl px-4 py-3" data-choice="b"><span data-template-id="q3-b" class="canva-text text-sm" style="color: rgb(203, 213, 225); font-weight: 400; font-style: normal; font-size: 16px;">B) UV Unwrapping</span>
+       </div>
+       <div class="quiz-option rounded-xl px-4 py-3" data-choice="c"><span data-template-id="q3-c" class="canva-text text-sm" style="color: rgb(203, 213, 225); font-weight: 400; font-style: normal; font-size: 16px;">C) Texture Painting</span>
+       </div>
+       <div class="quiz-option rounded-xl px-4 py-3" data-choice="d"><span data-template-id="q3-d" class="canva-text text-sm" style="color: rgb(203, 213, 225); font-weight: 400; font-style: normal; font-size: 16px;">D) Integration &amp; Review</span>
+       </div>
+      </div>
+     </div>
+     <div data-template-id="q4-card" class="canva-card glass rounded-2xl p-6" style="background: rgba(15, 15, 30, 0.6);">
+      <p data-template-id="q4-question" class="canva-text font-bold mb-4" style="color: rgb(248, 250, 252); font-weight: 400; font-style: normal; font-size: 16px;">4. In Blender, what does the Roughness slider control?</p>
+      <div class="space-y-2" data-quiz="4" data-answer="d">
+       <div class="quiz-option rounded-xl px-4 py-3" data-choice="a"><span data-template-id="q4-a" class="canva-text text-sm" style="color: rgb(203, 213, 225); font-weight: 400; font-style: normal; font-size: 16px;">A) The size of the object</span>
+       </div>
+       <div class="quiz-option rounded-xl px-4 py-3" data-choice="b"><span data-template-id="q4-b" class="canva-text text-sm" style="color: rgb(203, 213, 225); font-weight: 400; font-style: normal; font-size: 16px;">B) The color intensity</span>
+       </div>
+       <div class="quiz-option rounded-xl px-4 py-3" data-choice="c"><span data-template-id="q4-c" class="canva-text text-sm" style="color: rgb(203, 213, 225); font-weight: 400; font-style: normal; font-size: 16px;">C) The number of polygons</span>
+       </div>
+       <div class="quiz-option rounded-xl px-4 py-3" data-choice="d"><span data-template-id="q4-d" class="canva-text text-sm" style="color: rgb(203, 213, 225); font-weight: 400; font-style: normal; font-size: 16px;">D) How shiny or matte a surface appears</span>
+       </div>
+      </div>
+     </div>
+     <div data-template-id="q5-card" class="canva-card glass rounded-2xl p-6" style="background: rgba(15, 15, 30, 0.6);">
+      <p data-template-id="q5-question" class="canva-text font-bold mb-4" style="color: rgb(248, 250, 252); font-weight: 400; font-style: normal; font-size: 16px;">5. Which industry uses texture mapping for showing building renders to clients before construction?</p>
+      <div class="space-y-2" data-quiz="5" data-answer="b">
+       <div class="quiz-option rounded-xl px-4 py-3" data-choice="a"><span data-template-id="q5-a" class="canva-text text-sm" style="color: rgb(203, 213, 225); font-weight: 400; font-style: normal; font-size: 16px;">A) Music production</span>
+       </div>
+       <div class="quiz-option rounded-xl px-4 py-3" data-choice="b"><span data-template-id="q5-b" class="canva-text text-sm" style="color: rgb(203, 213, 225); font-weight: 400; font-style: normal; font-size: 16px;">B) Architectural visualization</span>
+       </div>
+       <div class="quiz-option rounded-xl px-4 py-3" data-choice="c"><span data-template-id="q5-c" class="canva-text text-sm" style="color: rgb(203, 213, 225); font-weight: 400; font-style: normal; font-size: 16px;">C) Data science</span>
+       </div>
+       <div class="quiz-option rounded-xl px-4 py-3" data-choice="d"><span data-template-id="q5-d" class="canva-text text-sm" style="color: rgb(203, 213, 225); font-weight: 400; font-style: normal; font-size: 16px;">D) Network engineering</span>
+       </div>
+      </div>
+     </div>
+    </div>
+    <div id="quiz-result" class="mt-8 text-center hidden">
+     <div class="inline-block glass rounded-2xl px-8 py-4">
+      <p class="text-2xl font-bold bg-gradient-to-r from-purple-400 to-cyan-400 bg-clip-text text-transparent">Score: <span id="score-display">0</span>/5</p>
+     </div>
+    </div>
+   </section>
+  </main>
+  <footer class="text-center py-10 border-t border-white/5">
+   <p data-template-id="footer-text" class="canva-text text-sm" style="color: rgb(100, 116, 139); font-weight: 400; font-style: normal; font-size: 16px;">© 2025 University of Perpetual Help System DALTA – Las Piñas | Texture and Mapping | Instructor: MKDB</p>
+  </footer>
+  <script src="/_sdk/editing_sdk.js"></script>
+  <script>
+        lucide.createIcons();
+
+        // Scroll reveal
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); } });
+        }, { threshold: 0.1 });
+        document.querySelectorAll('.fade-up').forEach(el => observer.observe(el));
+
+        // Quiz
+        let answered = 0, score = 0;
+        document.querySelectorAll('[data-quiz]').forEach(group => {
+            const answer = group.dataset.answer;
+            group.querySelectorAll('.quiz-option').forEach(opt => {
+                opt.addEventListener('click', () => {
+                    if (group.classList.contains('answered')) return;
+                    group.classList.add('answered');
+                    if (opt.dataset.choice === answer) { opt.classList.add('correct'); score++; }
+                    else { opt.classList.add('wrong'); group.querySelector(`[data-choice="${answer}"]`).classList.add('correct'); }
+                    group.querySelectorAll('.quiz-option').forEach(o => o.classList.add('disabled'));
+                    if (++answered === 5) {
+                        document.getElementById('quiz-result').classList.remove('hidden');
+                        document.getElementById('score-display').textContent = score;
+                    }
+                });
+            });
+        });
+    </script>
+ <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a0d7c00e70be11cf',t:'MTc4MTc1OTAzNC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script>
+</body></html>
