@@ -1,0 +1,318 @@
+<!doctype html>
+<html lang="en"><head><script src="/_sdk/telemetry_sdk.js"></script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Week 2 - Fundamentals of Textures</title>
+  <script src="https://cdn.tailwindcss.com/3.4.17"></script>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700;900&amp;display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/lucide@0.263.0/dist/umd/lucide.min.js"></script>
+  <style>
+        body { font-family: 'DM Sans', sans-serif; }
+        .glass { background: rgba(255,255,255,0.03); backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,0.08); }
+        .glass:hover { border-color: rgba(139,92,246,0.3); transform: translateY(-2px); }
+        .glass { transition: all 0.3s ease; }
+        .gradient-border { position: relative; }
+        .gradient-border::before { content:''; position:absolute; inset:-1px; border-radius:inherit; padding:1px; background:linear-gradient(135deg,#8b5cf6,#06b6d4,#8b5cf6); -webkit-mask:linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0); mask:linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0); -webkit-mask-composite:xor; mask-composite:exclude; opacity:0.4; transition:opacity 0.3s; pointer-events:none; }
+        .gradient-border:hover::before { opacity:0.8; }
+        .neon-glow { text-shadow: 0 0 20px rgba(139,92,246,0.5), 0 0 60px rgba(139,92,246,0.2); }
+        .quiz-option { transition: all 0.2s; cursor: pointer; border: 1px solid rgba(139,92,246,0.2); background: rgba(139,92,246,0.05); }
+        .quiz-option:hover { border-color: rgba(139,92,246,0.6); background: rgba(139,92,246,0.12); transform: translateX(4px); }
+        .quiz-option.correct { border-color: #22c55e; background: rgba(34,197,94,0.15); }
+        .quiz-option.wrong { border-color: #ef4444; background: rgba(239,68,68,0.15); }
+        .quiz-option.disabled { pointer-events: none; opacity: 0.7; }
+        .fade-up { opacity: 0; transform: translateY(30px); transition: opacity 0.6s ease, transform 0.6s ease; }
+        .fade-up.visible { opacity: 1; transform: translateY(0); }
+        .floating-orb { position: absolute; border-radius: 50%; filter: blur(80px); animation: float 8s ease-in-out infinite; }
+        @keyframes float { 0%,100%{ transform: translateY(0) scale(1); } 50%{ transform: translateY(-20px) scale(1.05); } }
+        .step-num { width:32px; height:32px; display:inline-flex; align-items:center; justify-content:center; border-radius:50%; background: linear-gradient(135deg,#8b5cf6,#06b6d4); font-weight:700; font-size:14px; flex-shrink:0; }
+        .nav-pill { transition: all 0.2s; padding: 6px 14px; border-radius: 20px; }
+        .nav-pill:hover { background: rgba(139,92,246,0.15); color: #c4b5fd; }
+    </style>
+  <script src="/_sdk/data_sdk.js" type="text/javascript"></script>
+  <script src="/_sdk/resizing_sdk.js" type="text/javascript"></script>
+ </head>
+ <body data-template-id="__page-root" class="min-h-screen w-full text-slate-200" style="background: rgb(8, 8, 15);">
+  <header class="relative overflow-hidden min-h-[50vh] flex items-center justify-center">
+   <img data-template-id="hero-image" class="canva-image absolute inset-0 w-full h-full object-cover opacity-25" loading="lazy" src="https://images.pexels.com/photos/5659587/pexels-photo-5659587.jpeg?auto=compress&amp;cs=tinysrgb&amp;w=1920&amp;fit=crop" alt="Detailed close-up of a dark textured surface with a rough appearance.">
+   <div class="absolute inset-0 bg-gradient-to-b from-[#0a0a12]/80 via-[#0a0a12]/40 to-[#0a0a12]"></div>
+   <div class="floating-orb w-72 h-72 bg-purple-600/30 top-10 -left-20"></div>
+   <div class="floating-orb w-56 h-56 bg-cyan-500/20 bottom-10 right-10" style="animation-delay:-4s"></div>
+   <div class="relative z-10 px-6 py-20 text-center max-w-4xl mx-auto">
+    <p data-template-id="institution-label" class="canva-text text-xs uppercase tracking-[0.25em] mb-4 opacity-80" style="color: rgb(167, 139, 250); font-weight: 400; font-style: normal; font-size: 16px;">University of Perpetual Help System DALTA – Las Piñas
+Instructor: MKDB</p>
+    <h1 data-template-id="page-title" class="canva-text neon-glow leading-tight" style="color: rgb(255, 255, 255); font-weight: 900; font-style: normal; font-size: 42px;">Week 2: Fundamentals of Textures</h1>
+    <p data-template-id="page-subtitle" class="canva-text mt-4 text-lg opacity-90" style="color: rgb(196, 181, 253); font-weight: 400; font-style: normal; font-size: 16px;">Definition • Resolution • Quality • Types • Workflow</p>
+   </div>
+  </header>
+  <nav class="sticky top-0 z-50 bg-[#0a0a12]/90 backdrop-blur-xl border-b border-white/5 px-4 py-3 overflow-x-auto">
+   <div class="max-w-6xl mx-auto flex gap-2 text-sm text-slate-400 whitespace-nowrap">
+    <a href="#lecture" class="nav-pill">Lecture</a> <a href="#texture-types" class="nav-pill">Types</a> <a href="#workflow" class="nav-pill">Workflow</a> <a href="#group-activity" class="nav-pill">Group</a> <a href="#individual-activity" class="nav-pill">Individual</a> <a href="#laboratory" class="nav-pill">Lab</a> <a href="#quiz" class="nav-pill">Quiz</a>
+   </div>
+  </nav>
+  <main class="max-w-5xl mx-auto px-4 py-12 space-y-14">
+   <!-- LECTURE -->
+   <section id="lecture" class="fade-up">
+    <h2 data-template-id="lecture-heading" class="canva-text neon-glow mb-8" style="color: rgb(224, 231, 255); font-weight: 700; font-style: normal; font-size: 24px;">📖 Lecture Content</h2>
+    <div data-template-id="definition-card" class="canva-card glass gradient-border rounded-2xl p-7 mb-6" style="background: rgba(15, 15, 30, 0.6);">
+     <h3 data-template-id="definition-title" class="canva-text font-bold mb-4" style="color: rgb(6, 182, 212); font-weight: 700; font-style: normal; font-size: 20px;">1. Definition of Texture</h3>
+     <p data-template-id="definition-content-1" class="canva-text leading-relaxed mb-4" style="color: rgb(203, 213, 225); font-weight: 400; font-style: normal; font-size: 16px;">In 3D graphics, a texture is a 2D image (or procedurally generated pattern) that is applied to the surface of a 3D model to add visual detail without increasing geometric complexity. Think of it as "digital wallpaper" for 3D objects — it defines what a surface looks like: its color, bumpiness, shininess, and transparency.</p>
+     <p data-template-id="definition-content-2" class="canva-text leading-relaxed mb-4" style="color: rgb(148, 163, 184); font-weight: 400; font-style: normal; font-size: 16px;">Real-World Analogy: Imagine you have a plain white ceramic mug. By itself, it's boring — just a smooth white shape. Now imagine wrapping it with a printed vinyl sticker that shows a marble pattern. Suddenly the mug looks like it's made of marble, even though the actual shape hasn't changed. That sticker is essentially a texture. In 3D, we do the same thing digitally — we "wrap" images around models to give them visual identity.</p>
+     <p data-template-id="definition-content-3" class="canva-text leading-relaxed" style="color: rgb(148, 163, 184); font-weight: 400; font-style: normal; font-size: 16px;">Industry Context: Every surface you see in modern games (Valorant's weapon skins, Minecraft's blocks, GTA V's city streets) and animated films (Encanto's embroidered fabrics, Spider-Verse's halftone dots) relies on textures. Without them, everything would look like untextured gray clay — the way models look in wireframe mode.</p>
+    </div>
+    <div data-template-id="resolution-card" class="canva-card glass gradient-border rounded-2xl p-7 mb-6" style="background: rgba(15, 15, 30, 0.6);">
+     <h3 data-template-id="resolution-title" class="canva-text font-bold mb-4" style="color: rgb(6, 182, 212); font-weight: 700; font-style: normal; font-size: 20px;">2. Texture Resolution</h3>
+     <p data-template-id="resolution-content-1" class="canva-text leading-relaxed mb-4" style="color: rgb(203, 213, 225); font-weight: 400; font-style: normal; font-size: 16px;">Texture resolution refers to the dimensions of a texture image, measured in pixels (width × height). Common resolutions follow powers of 2: 256×256, 512×512, 1024×1024 (1K), 2048×2048 (2K), 4096×4096 (4K), and 8192×8192 (8K). The "power of 2" rule exists because GPUs process these sizes most efficiently — they're optimized for binary math.</p>
+     <p data-template-id="resolution-content-2" class="canva-text leading-relaxed mb-4" style="color: rgb(148, 163, 184); font-weight: 400; font-style: normal; font-size: 16px;">Why Resolution Matters: A low-resolution texture (256×256) stretched across a large wall will appear blurry and pixelated — like viewing a phone photo zoomed in 500%. A high-resolution texture (4K) on that same wall will show crisp brick edges, mortar detail, and subtle color variation. However, higher resolution means larger file size and more GPU memory consumed.</p><img data-template-id="resolution-image" class="canva-image w-full h-48 object-cover rounded-xl mb-4" loading="lazy" src="https://images.pexels.com/photos/7026467/pexels-photo-7026467.jpeg?auto=compress&amp;cs=tinysrgb&amp;w=800&amp;fit=crop" alt="Colorful abstract pattern with pastel blue and pink pixelated design, ideal for vibrant artistic backgrounds.">
+     <p data-template-id="resolution-content-3" class="canva-text leading-relaxed mb-4" style="color: rgb(148, 163, 184); font-weight: 400; font-style: normal; font-size: 16px;">Practical Guidelines:
+• Mobile games: 512×512 to 1K textures (limited GPU memory)
+• PC/Console games: 2K to 4K for hero assets, 1K for background props
+• Film/Cinematics: 4K to 8K (no real-time constraint, renders offline)
+• VR: 2K minimum per eye — lower causes visible pixels since the screen is inches from your face</p>
+     <p data-template-id="resolution-content-4" class="canva-text leading-relaxed" style="color: rgb(167, 139, 250); font-weight: 400; font-style: normal; font-size: 16px;">Example: In Genshin Impact, the main character's face texture is approximately 2K (2048×2048) for sharp detail during close-up cutscenes, while distant mountain rocks use only 512×512 since players never get close enough to notice.</p>
+    </div>
+    <div data-template-id="quality-card" class="canva-card glass gradient-border rounded-2xl p-7 mb-6" style="background: rgba(15, 15, 30, 0.6);">
+     <h3 data-template-id="quality-title" class="canva-text font-bold mb-4" style="color: rgb(6, 182, 212); font-weight: 700; font-style: normal; font-size: 20px;">3. Texture Quality</h3>
+     <p data-template-id="quality-content-1" class="canva-text leading-relaxed mb-4" style="color: rgb(203, 213, 225); font-weight: 400; font-style: normal; font-size: 16px;">Texture quality goes beyond just resolution. A 4K texture can still look terrible if it's poorly made. Quality encompasses: sharpness (no unwanted blur), proper tiling (seamless repetition without visible edges), color accuracy (matches the intended material), detail density (appropriate level of detail for the viewing distance), and compression artifacts (minimal JPEG-style blockiness).</p>
+     <p data-template-id="quality-content-2" class="canva-text leading-relaxed mb-4" style="color: rgb(148, 163, 184); font-weight: 400; font-style: normal; font-size: 16px;">The "Texel Density" Concept: Texel density means how many texture pixels (texels) cover each unit of 3D space. Consistent texel density across all objects in a scene ensures nothing looks out of place. If a crate has 512 pixels per meter but the floor has only 64 pixels per meter, the floor will look blurry next to the crate — breaking immersion.</p>
+     <p data-template-id="quality-content-3" class="canva-text leading-relaxed mb-4" style="color: rgb(148, 163, 184); font-weight: 400; font-style: normal; font-size: 16px;">Common Quality Pitfalls:
+• Stretching — texture pulled across a surface unevenly (looks like melted plastic)
+• Tiling artifacts — visible repetition pattern when a small texture repeats across a large surface
+• Color banding — smooth gradients appearing as distinct color steps (usually from over-compression)
+• Seams — visible lines where UV islands meet on the 3D model</p>
+     <p data-template-id="quality-content-4" class="canva-text leading-relaxed" style="color: rgb(167, 139, 250); font-weight: 400; font-style: normal; font-size: 16px;">Real Example: Open any AAA game and find a brick wall. Notice how every 5th brick has a slightly different shade, some have chipped corners, mortar varies in width. This "controlled randomness" is what separates professional textures from amateur ones that use identical repeating bricks.</p>
+    </div>
+   </section><!-- TEXTURE TYPES -->
+   <section id="texture-types" class="fade-up">
+    <h2 data-template-id="types-heading" class="canva-text neon-glow mb-8" style="color: rgb(224, 231, 255); font-weight: 700; font-style: normal; font-size: 24px;">4. Texture Types (PBR Maps)</h2>
+    <p data-template-id="types-intro" class="canva-text leading-relaxed mb-6" style="color: rgb(203, 213, 225); font-weight: 400; font-style: normal; font-size: 16px;">Modern 3D rendering uses Physically Based Rendering (PBR), which requires multiple texture maps working together to simulate how real materials interact with light. Each map controls a different surface property. Here are the essential types:</p>
+    <div class="grid md:grid-cols-3 gap-5 mb-6">
+     <div data-template-id="type-diffuse-card" class="canva-card glass gradient-border rounded-2xl overflow-hidden" style="background: rgba(15, 15, 30, 0.6);">
+      <img data-template-id="type-diffuse-image" class="canva-image w-full h-40 object-cover" loading="lazy" src="https://images.pexels.com/photos/3637875/pexels-photo-3637875.jpeg?auto=compress&amp;cs=tinysrgb&amp;w=800&amp;fit=crop" alt="Close-up of a textured, aged brick wall with red and gray tones.">
+      <div class="p-5">
+       <h3 data-template-id="type-diffuse-title" class="canva-text font-bold mb-2" style="color: rgb(248, 250, 252); font-weight: 700; font-style: normal; font-size: 19px;">🎨 Diffuse / Albedo Map</h3>
+       <p data-template-id="type-diffuse-desc" class="canva-text text-sm leading-relaxed" style="color: rgb(148, 163, 184); font-weight: 400; font-style: normal; font-size: 16px;">The base color of a surface without any lighting or shadow information. Pure flat color. A red brick wall's albedo shows brick colors and mortar — but no shadows in the cracks. Think of it as what the surface would look like under perfectly even, shadowless lighting.</p>
+      </div>
+     </div>
+     <div data-template-id="type-normal-card" class="canva-card glass gradient-border rounded-2xl overflow-hidden" style="background: rgba(15, 15, 30, 0.6);">
+      <img data-template-id="type-normal-image" class="canva-image w-full h-40 object-cover" loading="lazy" src="https://images.pexels.com/photos/11624972/pexels-photo-11624972.jpeg?auto=compress&amp;cs=tinysrgb&amp;w=800&amp;fit=crop" alt="Detailed close-up of a rocky dark textured surface creating a rugged appearance.">
+      <div class="p-5">
+       <h3 data-template-id="type-normal-title" class="canva-text font-bold mb-2" style="color: rgb(248, 250, 252); font-weight: 700; font-style: normal; font-size: 19px;">🗺️ Normal Map</h3>
+       <p data-template-id="type-normal-desc" class="canva-text text-sm leading-relaxed" style="color: rgb(148, 163, 184); font-weight: 400; font-style: normal; font-size: 16px;">A purple/blue-tinted image that fakes surface bumps and dents by telling the renderer which direction each pixel "faces." This creates the illusion of depth without adding polygons. The brick cracks appear deep, stones look rough — all from a flat surface with a normal map applied.</p>
+      </div>
+     </div>
+     <div data-template-id="type-roughness-card" class="canva-card glass gradient-border rounded-2xl overflow-hidden" style="background: rgba(15, 15, 30, 0.6);">
+      <img data-template-id="type-roughness-image" class="canva-image w-full h-40 object-cover" loading="lazy" src="https://images.pexels.com/photos/2578325/pexels-photo-2578325.jpeg?auto=compress&amp;cs=tinysrgb&amp;w=800&amp;fit=crop" alt="Vivid close-up of water droplets on contrasting red and black surfaces, creating a striking visual effect.">
+      <div class="p-5">
+       <h3 data-template-id="type-roughness-title" class="canva-text font-bold mb-2" style="color: rgb(248, 250, 252); font-weight: 700; font-style: normal; font-size: 19px;">✨ Roughness Map</h3>
+       <p data-template-id="type-roughness-desc" class="canva-text text-sm leading-relaxed" style="color: rgb(148, 163, 184); font-weight: 400; font-style: normal; font-size: 16px;">A grayscale image controlling how sharp or blurry reflections are. White = rough/matte (like chalk), Black = smooth/glossy (like a mirror). A kitchen counter might be smooth (dark roughness) while the wooden cutting board beside it is rough (light roughness).</p>
+      </div>
+     </div>
+    </div>
+    <div data-template-id="types-extra-card" class="canva-card glass gradient-border rounded-2xl p-7" style="background: rgba(15, 15, 30, 0.6);">
+     <h3 data-template-id="types-extra-title" class="canva-text font-bold mb-4" style="color: rgb(6, 182, 212); font-weight: 700; font-style: normal; font-size: 19px;">Other Important Map Types</h3>
+     <p data-template-id="types-extra-content-1" class="canva-text leading-relaxed mb-4" style="color: rgb(148, 163, 184); font-weight: 400; font-style: normal; font-size: 16px;">Metallic Map — Grayscale. White = metal, Black = non-metal (dielectric). A sword has white on the blade (metal) and black on the leather grip (non-metal). There's no "semi-metal" in reality — pixels should be near 0 or near 1.
+
+Ambient Occlusion (AO) Map — Shows where ambient light is blocked (crevices, corners). Darkens those areas for realistic contact shadows without expensive ray-tracing.
+
+Height/Displacement Map — Grayscale image that actually moves geometry up or down. Unlike normal maps (which fake it), displacement maps create real 3D detail — but cost more polygons.</p>
+     <p data-template-id="types-extra-content-2" class="canva-text leading-relaxed" style="color: rgb(148, 163, 184); font-weight: 400; font-style: normal; font-size: 16px;">Emissive Map — Defines areas that glow/emit light (neon signs, LED screens, lava). Only the colored areas emit light; black areas emit nothing.
+
+Opacity/Alpha Map — Controls transparency. White = fully visible, Black = invisible. Used for leaves, chain-link fences, hair cards — anything with holes or partial transparency.</p>
+    </div>
+   </section><!-- WORKFLOW -->
+   <section id="workflow" class="fade-up">
+    <div data-template-id="workflow-card" class="canva-card glass gradient-border rounded-2xl p-7" style="background: rgba(15, 15, 30, 0.6);">
+     <h2 data-template-id="workflow-heading" class="canva-text font-bold mb-4" style="color: rgb(6, 182, 212); font-weight: 700; font-style: normal; font-size: 20px;">5. Texture Workflow</h2>
+     <p data-template-id="workflow-intro" class="canva-text leading-relaxed mb-5" style="color: rgb(203, 213, 225); font-weight: 400; font-style: normal; font-size: 16px;">A professional texture workflow ensures consistency and efficiency. Whether you're a solo indie developer or part of a 200-person studio, following a structured process prevents wasted time and produces better results:</p>
+     <div class="space-y-4">
+      <div class="flex gap-3 items-start"><span class="step-num">1</span>
+       <p data-template-id="workflow-step-1" class="canva-text leading-relaxed" style="color: rgb(148, 163, 184); font-weight: 400; font-style: normal; font-size: 16px;">Reference Collection — Gather 10-30 reference photos of the material. Use your phone, Google Images, textures.com, or Poly Haven. Organize references into a mood board (PureRef is free and excellent for this). Study the material: How does light hit it? What imperfections exist? What's the color range?</p>
+      </div>
+      <div class="flex gap-3 items-start"><span class="step-num">2</span>
+       <p data-template-id="workflow-step-2" class="canva-text leading-relaxed" style="color: rgb(148, 163, 184); font-weight: 400; font-style: normal; font-size: 16px;">Base Texture Creation — Create or source the base texture. Methods: (a) Photo-based: photograph a real surface, remove lighting with GIMP/Photoshop; (b) Hand-painted: paint from scratch in Krita/Photoshop for stylized looks; (c) Procedural: generate using node-based systems in Blender or Substance Designer for infinite variation.</p>
+      </div>
+      <div class="flex gap-3 items-start"><span class="step-num">3</span>
+       <p data-template-id="workflow-step-3" class="canva-text leading-relaxed" style="color: rgb(148, 163, 184); font-weight: 400; font-style: normal; font-size: 16px;">Tiling &amp; Cleanup — Make the texture seamlessly tileable (edges match perfectly when repeated). In GIMP: Filters &gt; Map &gt; Make Seamless. Fix visible seams with the Clone Stamp tool. Test by tiling 3×3 in preview — if you can spot the repeat, fix it.</p>
+      </div>
+      <div class="flex gap-3 items-start"><span class="step-num">4</span>
+       <p data-template-id="workflow-step-4" class="canva-text leading-relaxed" style="color: rgb(148, 163, 184); font-weight: 400; font-style: normal; font-size: 16px;">Map Generation — Derive additional PBR maps from your base. Normal maps: generate from height using GIMP's normalmap plugin or Blender. Roughness: desaturate the albedo and adjust levels. AO: bake in Blender using Cycles. Each map must align pixel-perfectly with the albedo.</p>
+      </div>
+      <div class="flex gap-3 items-start"><span class="step-num">5</span>
+       <p data-template-id="workflow-step-5" class="canva-text leading-relaxed" style="color: rgb(148, 163, 184); font-weight: 400; font-style: normal; font-size: 16px;">Testing &amp; Iteration — Apply all maps to a test mesh in Blender (use a sphere or the actual game asset). Check under multiple lighting conditions: direct sunlight, overcast, night with point lights. Look for stretching, seam issues, incorrect roughness response. Iterate until the material is convincing from all angles.</p>
+      </div>
+     </div>
+    </div>
+   </section><!-- GROUP ACTIVITY -->
+   <section id="group-activity" class="fade-up">
+    <div data-template-id="group-card" class="canva-card glass gradient-border rounded-2xl p-7" style="background: rgba(15, 15, 30, 0.6);">
+     <h2 data-template-id="group-heading" class="canva-text font-bold mb-4" style="color: rgb(34, 197, 94); font-weight: 700; font-style: normal; font-size: 22px;">👥 Group Activity: "Texture Type Identification Challenge"</h2>
+     <p data-template-id="group-instruction" class="canva-text leading-relaxed mb-4" style="color: rgb(203, 213, 225); font-weight: 400; font-style: normal; font-size: 16px;">Form groups of 4-5 members. Your group will analyze real texture maps and identify what type each one is. This trains your eye to recognize PBR map types instantly — a critical skill in any studio. Time: 25 minutes + 10 minutes discussion.</p>
+     <p data-template-id="group-task-1" class="canva-text leading-relaxed mb-3" style="color: rgb(148, 163, 184); font-weight: 400; font-style: normal; font-size: 16px;">Task 1: The instructor will display 10 texture images on screen (a mix of albedo, normal, roughness, metallic, AO, and height maps). For each image, your group must identify: (a) What type of map is it? (b) What material do you think it belongs to? (c) What visual clues helped you identify it? Write your answers on the provided worksheet.</p>
+     <p data-template-id="group-task-2" class="canva-text leading-relaxed mb-3" style="color: rgb(148, 163, 184); font-weight: 400; font-style: normal; font-size: 16px;">Task 2: Visit textures.com or ambientcg.com as a group. Download one complete PBR material set (must include at least: albedo, normal, roughness). Compare the maps side by side. Write 2-3 sentences explaining how each map contributes to the final look. What would be missing if you removed the normal map? The roughness map?</p>
+     <p data-template-id="group-task-3" class="canva-text leading-relaxed mb-3" style="color: rgb(148, 163, 184); font-weight: 400; font-style: normal; font-size: 16px;">Task 3: Create a simple comparison chart (table format) showing: Map Type | Color Appearance | What It Controls | Real-World Analogy. Fill in rows for Albedo, Normal, Roughness, Metallic, and AO. Present your chart to the class.</p>
+     <p data-template-id="group-deliverable" class="canva-text leading-relaxed mt-4" style="color: rgb(167, 139, 250); font-weight: 400; font-style: normal; font-size: 16px;">📌 Deliverable: Upload your completed worksheet + comparison chart + downloaded PBR set screenshots to LMS. Grading: Correct identification accuracy (40%), Quality of chart explanations (30%), Group participation (30%).</p>
+    </div>
+   </section><!-- INDIVIDUAL ACTIVITY -->
+   <section id="individual-activity" class="fade-up">
+    <div data-template-id="individual-card" class="canva-card glass gradient-border rounded-2xl p-7" style="background: rgba(15, 15, 30, 0.6);">
+     <h2 data-template-id="individual-heading" class="canva-text font-bold mb-4" style="color: rgb(245, 158, 11); font-weight: 700; font-style: normal; font-size: 22px;">📝 Individual Activity: "Texture Resolution Explorer"</h2>
+     <p data-template-id="individual-instruction" class="canva-text leading-relaxed mb-4" style="color: rgb(203, 213, 225); font-weight: 400; font-style: normal; font-size: 16px;">This activity builds your understanding of how resolution affects visual quality and performance. You'll create the same texture at multiple resolutions and document the differences. Time: Take-home, due next meeting.</p>
+     <p data-template-id="individual-task-1" class="canva-text leading-relaxed mb-3" style="color: rgb(148, 163, 184); font-weight: 400; font-style: normal; font-size: 16px;">Task 1: Using your phone, photograph ONE interesting real-world texture (e.g., a concrete wall, fabric pattern, wood grain, or tile floor). Import the photo into GIMP. Resize it to create 4 versions: 64×64, 256×256, 1024×1024, and 2048×2048. Export each as PNG. Place all 4 side by side in a single comparison image.</p>
+     <p data-template-id="individual-task-2" class="canva-text leading-relaxed mb-3" style="color: rgb(148, 163, 184); font-weight: 400; font-style: normal; font-size: 16px;">Task 2: For each resolution version, write a brief analysis (2-3 sentences): What details are visible? What's lost? At what resolution does the texture become "acceptable" for (a) a mobile game background, (b) a PC game hero prop, (c) a film close-up? Note the file size of each version.</p>
+     <p data-template-id="individual-task-3" class="canva-text leading-relaxed mb-3" style="color: rgb(148, 163, 184); font-weight: 400; font-style: normal; font-size: 16px;">Task 3: Open Blender, create a simple plane, and apply each resolution version as a material texture. Take a screenshot of each in Material Preview mode. Document how the render looks different at each resolution. Title your submission: "[Your Name] – Week 2 Resolution Study".</p>
+     <p data-template-id="individual-deliverable" class="canva-text leading-relaxed mt-4" style="color: rgb(167, 139, 250); font-weight: 400; font-style: normal; font-size: 16px;">📌 Deliverable: Submit PDF containing: (1) Original photo, (2) 4-resolution comparison image, (3) Written analysis per resolution, (4) Blender screenshots, (5) File size comparison table. Grading: Quality of texture chosen (20%), Accuracy of analysis (40%), Blender application (30%), Presentation (10%).</p>
+    </div>
+   </section><!-- LABORATORY -->
+   <section id="laboratory" class="fade-up">
+    <div data-template-id="lab-card" class="canva-card glass gradient-border rounded-2xl p-7" style="background: rgba(15, 15, 30, 0.6);">
+     <h2 data-template-id="lab-heading" class="canva-text font-bold mb-4" style="color: rgb(6, 182, 212); font-weight: 700; font-style: normal; font-size: 22px;">🖥️ Laboratory Lesson (3 Hours)</h2>
+     <p data-template-id="lab-intro" class="canva-text leading-relaxed mb-5" style="color: rgb(203, 213, 225); font-weight: 400; font-style: normal; font-size: 16px;">This week's lab covers three hands-on exercises: identifying textures from reference images, comparing resolution quality firsthand, and creating your first simple surface textures using GIMP and Krita. By the end, you'll have a personal Texture Reference Sheet and a Basic Texture Collection.</p><img data-template-id="lab-image" class="canva-image w-full h-48 object-cover rounded-xl mb-6" loading="lazy" src="https://images.pexels.com/photos/18243527/pexels-photo-18243527.jpeg?auto=compress&amp;cs=tinysrgb&amp;w=1280&amp;fit=crop" alt="An adult man creating digital art on a touchscreen device in a dimly lit room.">
+     <h3 data-template-id="lab-part1-title" class="canva-text font-bold mb-2" style="color: rgb(248, 250, 252); font-weight: 700; font-style: normal; font-size: 19px;">Part 1: Texture Identification Exercise (45 min)</h3>
+     <p data-template-id="lab-part1-content" class="canva-text leading-relaxed mb-5 whitespace-pre-line" style="color: rgb(148, 163, 184); font-weight: 400; font-style: normal; font-size: 16px;">• Open the provided "Week 2 Texture Samples" folder (downloadable from LMS)
+• The folder contains 15 unlabeled texture images — a mix of albedo, normal, roughness, height, metallic, and AO maps
+• For each image, identify the map type and justify your reasoning in 1 sentence
+• Create a table: File Name | Map Type | Clue Used (e.g., "Purple/blue color = Normal map", "Grayscale with white on edges = AO")
+• Cross-reference with classmates — discuss any disagreements
+• Bonus: For 3 textures, identify what real-world material they likely belong to</p>
+     <h3 data-template-id="lab-part2-title" class="canva-text font-bold mb-2" style="color: rgb(248, 250, 252); font-weight: 700; font-style: normal; font-size: 19px;">Part 2: Texture Resolution Comparison (45 min)</h3>
+     <p data-template-id="lab-part2-content" class="canva-text leading-relaxed mb-5 whitespace-pre-line" style="color: rgb(148, 163, 184); font-weight: 400; font-style: normal; font-size: 16px;">• Open GIMP and load a high-resolution texture from textures.com (at least 2K)
+• Use Image &gt; Scale Image to create versions at: 2048×2048, 1024×1024, 512×512, 256×256, 128×128, 64×64
+• Export each as PNG and note file sizes
+• In Blender: Create 6 planes side by side, apply each resolution version to a different plane
+• Switch to Material Preview (Z &gt; Material Preview)
+• Orbit around and zoom in — document at what point pixelation becomes unacceptable
+• Take comparison screenshots at 3 viewing distances: far (full scene), medium, close-up
+• Record observations in your lab journal: resolution vs. quality vs. file size tradeoffs</p>
+     <h3 data-template-id="lab-part3-title" class="canva-text font-bold mb-2" style="color: rgb(248, 250, 252); font-weight: 700; font-style: normal; font-size: 19px;">Part 3: Creating Simple Surface Textures (90 min)</h3>
+     <p data-template-id="lab-part3-content" class="canva-text leading-relaxed mb-5 whitespace-pre-line" style="color: rgb(148, 163, 184); font-weight: 400; font-style: normal; font-size: 16px;">• Exercise A — Seamless Tile in GIMP (30 min):
+  Create a new 512×512 image. Paint a simple stone/concrete texture using brushes.
+  Apply Filters &gt; Map &gt; Make Seamless. Test by tiling: Filters &gt; Map &gt; Tile (set to 3×3).
+  Fix any visible seams with Clone Stamp.
+
+• Exercise B — Hand-Painted Wood in Krita (30 min):
+  New canvas 1024×1024. Use Krita's textured brushes to paint a wood grain pattern.
+  Study your reference photos. Layer: base brown → dark grain lines → lighter highlights.
+  Keep it tileable by painting from center outward.
+
+• Exercise C — Applying in Blender (30 min):
+  Import your stone and wood textures into Blender.
+  Create two objects (cube for crate, plane for floor). Apply textures as Base Color.
+  Generate a basic Normal Map from your textures using Blender's texture node setup.
+  Compare with and without the normal map — screenshot both results.</p>
+     <h3 data-template-id="lab-output-title" class="canva-text font-bold mb-2" style="color: rgb(34, 197, 94); font-weight: 700; font-style: normal; font-size: 19px;">📋 Laboratory Output (Submit via LMS)</h3>
+     <p data-template-id="lab-output-content" class="canva-text leading-relaxed whitespace-pre-line" style="color: rgb(148, 163, 184); font-weight: 400; font-style: normal; font-size: 16px;">1. Texture Reference Sheet: A document with your identification table (15 textures identified with reasoning) — PDF format
+2. Resolution Comparison Report: Screenshots at 3 distances + file size table + written observations (minimum 200 words)
+3. Basic Texture Collection: Your created textures (stone seamless tile + wood grain) as PNG files at their working resolutions
+4. Blender Application Screenshots: Before/after normal map comparison for both materials
+
+File naming: LastName_Week02_Lab_[item].png
+All files zipped into: LastName_Week02_Lab.zip</p>
+    </div>
+   </section><!-- QUIZ -->
+   <section id="quiz" class="fade-up">
+    <h2 data-template-id="quiz-heading" class="canva-text neon-glow mb-8" style="color: rgb(224, 231, 255); font-weight: 700; font-style: normal; font-size: 24px;">📋 Sample Quiz</h2>
+    <div class="space-y-5" id="quiz-container">
+     <div data-template-id="q1-card" class="canva-card glass rounded-2xl p-6" style="background: rgba(15, 15, 30, 0.6);">
+      <p data-template-id="q1-question" class="canva-text font-bold mb-4" style="color: rgb(248, 250, 252); font-weight: 400; font-style: normal; font-size: 16px;">1. What is a texture in 3D graphics?</p>
+      <div class="space-y-2" data-quiz="1" data-answer="c">
+       <div class="quiz-option rounded-xl px-4 py-3" data-choice="a"><span data-template-id="q1-a" class="canva-text text-sm" style="color: rgb(203, 213, 225); font-weight: 400; font-style: normal; font-size: 16px;">A) A 3D model's polygon count</span>
+       </div>
+       <div class="quiz-option rounded-xl px-4 py-3" data-choice="b"><span data-template-id="q1-b" class="canva-text text-sm" style="color: rgb(203, 213, 225); font-weight: 400; font-style: normal; font-size: 16px;">B) The animation speed of an object</span>
+       </div>
+       <div class="quiz-option rounded-xl px-4 py-3" data-choice="c"><span data-template-id="q1-c" class="canva-text text-sm" style="color: rgb(203, 213, 225); font-weight: 400; font-style: normal; font-size: 16px;">C) A 2D image applied to a 3D surface to add visual detail</span>
+       </div>
+       <div class="quiz-option rounded-xl px-4 py-3" data-choice="d"><span data-template-id="q1-d" class="canva-text text-sm" style="color: rgb(203, 213, 225); font-weight: 400; font-style: normal; font-size: 16px;">D) A type of rendering engine</span>
+       </div>
+      </div>
+     </div>
+     <div data-template-id="q2-card" class="canva-card glass rounded-2xl p-6" style="background: rgba(15, 15, 30, 0.6);">
+      <p data-template-id="q2-question" class="canva-text font-bold mb-4" style="color: rgb(248, 250, 252); font-weight: 400; font-style: normal; font-size: 16px;">2. Which texture resolution is commonly referred to as "2K"?</p>
+      <div class="space-y-2" data-quiz="2" data-answer="b">
+       <div class="quiz-option rounded-xl px-4 py-3" data-choice="a"><span data-template-id="q2-a" class="canva-text text-sm" style="color: rgb(203, 213, 225); font-weight: 400; font-style: normal; font-size: 16px;">A) 1024×1024</span>
+       </div>
+       <div class="quiz-option rounded-xl px-4 py-3" data-choice="b"><span data-template-id="q2-b" class="canva-text text-sm" style="color: rgb(203, 213, 225); font-weight: 400; font-style: normal; font-size: 16px;">B) 2048×2048</span>
+       </div>
+       <div class="quiz-option rounded-xl px-4 py-3" data-choice="c"><span data-template-id="q2-c" class="canva-text text-sm" style="color: rgb(203, 213, 225); font-weight: 400; font-style: normal; font-size: 16px;">C) 2000×2000</span>
+       </div>
+       <div class="quiz-option rounded-xl px-4 py-3" data-choice="d"><span data-template-id="q2-d" class="canva-text text-sm" style="color: rgb(203, 213, 225); font-weight: 400; font-style: normal; font-size: 16px;">D) 4096×4096</span>
+       </div>
+      </div>
+     </div>
+     <div data-template-id="q3-card" class="canva-card glass rounded-2xl p-6" style="background: rgba(15, 15, 30, 0.6);">
+      <p data-template-id="q3-question" class="canva-text font-bold mb-4" style="color: rgb(248, 250, 252); font-weight: 400; font-style: normal; font-size: 16px;">3. What does a Normal Map do?</p>
+      <div class="space-y-2" data-quiz="3" data-answer="d">
+       <div class="quiz-option rounded-xl px-4 py-3" data-choice="a"><span data-template-id="q3-a" class="canva-text text-sm" style="color: rgb(203, 213, 225); font-weight: 400; font-style: normal; font-size: 16px;">A) Defines the base color of a surface</span>
+       </div>
+       <div class="quiz-option rounded-xl px-4 py-3" data-choice="b"><span data-template-id="q3-b" class="canva-text text-sm" style="color: rgb(203, 213, 225); font-weight: 400; font-style: normal; font-size: 16px;">B) Controls how shiny or matte a surface is</span>
+       </div>
+       <div class="quiz-option rounded-xl px-4 py-3" data-choice="c"><span data-template-id="q3-c" class="canva-text text-sm" style="color: rgb(203, 213, 225); font-weight: 400; font-style: normal; font-size: 16px;">C) Determines which areas are transparent</span>
+       </div>
+       <div class="quiz-option rounded-xl px-4 py-3" data-choice="d"><span data-template-id="q3-d" class="canva-text text-sm" style="color: rgb(203, 213, 225); font-weight: 400; font-style: normal; font-size: 16px;">D) Fakes surface bumps and depth by redirecting light calculations</span>
+       </div>
+      </div>
+     </div>
+     <div data-template-id="q4-card" class="canva-card glass rounded-2xl p-6" style="background: rgba(15, 15, 30, 0.6);">
+      <p data-template-id="q4-question" class="canva-text font-bold mb-4" style="color: rgb(248, 250, 252); font-weight: 400; font-style: normal; font-size: 16px;">4. In a Roughness Map, what does a WHITE pixel represent?</p>
+      <div class="space-y-2" data-quiz="4" data-answer="a">
+       <div class="quiz-option rounded-xl px-4 py-3" data-choice="a"><span data-template-id="q4-a" class="canva-text text-sm" style="color: rgb(203, 213, 225); font-weight: 400; font-style: normal; font-size: 16px;">A) A completely rough/matte surface</span>
+       </div>
+       <div class="quiz-option rounded-xl px-4 py-3" data-choice="b"><span data-template-id="q4-b" class="canva-text text-sm" style="color: rgb(203, 213, 225); font-weight: 400; font-style: normal; font-size: 16px;">B) A mirror-like reflective surface</span>
+       </div>
+       <div class="quiz-option rounded-xl px-4 py-3" data-choice="c"><span data-template-id="q4-c" class="canva-text text-sm" style="color: rgb(203, 213, 225); font-weight: 400; font-style: normal; font-size: 16px;">C) A metallic surface</span>
+       </div>
+       <div class="quiz-option rounded-xl px-4 py-3" data-choice="d"><span data-template-id="q4-d" class="canva-text text-sm" style="color: rgb(203, 213, 225); font-weight: 400; font-style: normal; font-size: 16px;">D) A transparent area</span>
+       </div>
+      </div>
+     </div>
+     <div data-template-id="q5-card" class="canva-card glass rounded-2xl p-6" style="background: rgba(15, 15, 30, 0.6);">
+      <p data-template-id="q5-question" class="canva-text font-bold mb-4" style="color: rgb(248, 250, 252); font-weight: 400; font-style: normal; font-size: 16px;">5. Why do game textures use power-of-2 resolutions (256, 512, 1024, etc.)?</p>
+      <div class="space-y-2" data-quiz="5" data-answer="c">
+       <div class="quiz-option rounded-xl px-4 py-3" data-choice="a"><span data-template-id="q5-a" class="canva-text text-sm" style="color: rgb(203, 213, 225); font-weight: 400; font-style: normal; font-size: 16px;">A) Because artists prefer round numbers</span>
+       </div>
+       <div class="quiz-option rounded-xl px-4 py-3" data-choice="b"><span data-template-id="q5-b" class="canva-text text-sm" style="color: rgb(203, 213, 225); font-weight: 400; font-style: normal; font-size: 16px;">B) Because monitors only display power-of-2 images</span>
+       </div>
+       <div class="quiz-option rounded-xl px-4 py-3" data-choice="c"><span data-template-id="q5-c" class="canva-text text-sm" style="color: rgb(203, 213, 225); font-weight: 400; font-style: normal; font-size: 16px;">C) Because GPUs process these sizes most efficiently due to binary math optimization</span>
+       </div>
+       <div class="quiz-option rounded-xl px-4 py-3" data-choice="d"><span data-template-id="q5-d" class="canva-text text-sm" style="color: rgb(203, 213, 225); font-weight: 400; font-style: normal; font-size: 16px;">D) Because file formats require it</span>
+       </div>
+      </div>
+     </div>
+    </div>
+    <div id="quiz-result" class="mt-8 text-center hidden">
+     <div class="inline-block glass rounded-2xl px-8 py-4">
+      <p class="text-2xl font-bold bg-gradient-to-r from-purple-400 to-cyan-400 bg-clip-text text-transparent">Score: <span id="score-display">0</span>/5</p>
+     </div>
+    </div>
+   </section>
+  </main>
+  <footer class="text-center py-10 border-t border-white/5">
+   <p data-template-id="footer-text" class="canva-text text-sm" style="color: rgb(100, 116, 139); font-weight: 400; font-style: normal; font-size: 16px;">© 2025 University of Perpetual Help System DALTA – Las Piñas | Texture and Mapping | Instructor: MKDB</p>
+  </footer>
+  <script src="/_sdk/editing_sdk.js"></script>
+  <script>
+        lucide.createIcons();
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+        }, { threshold: 0.1 });
+        document.querySelectorAll('.fade-up').forEach(el => observer.observe(el));
+
+        let answered = 0, score = 0;
+        document.querySelectorAll('[data-quiz]').forEach(group => {
+            const answer = group.dataset.answer;
+            group.querySelectorAll('.quiz-option').forEach(opt => {
+                opt.addEventListener('click', () => {
+                    if (group.classList.contains('answered')) return;
+                    group.classList.add('answered');
+                    if (opt.dataset.choice === answer) { opt.classList.add('correct'); score++; }
+                    else { opt.classList.add('wrong'); group.querySelector(`[data-choice="${answer}"]`).classList.add('correct'); }
+                    group.querySelectorAll('.quiz-option').forEach(o => o.classList.add('disabled'));
+                    if (++answered === 5) {
+                        document.getElementById('quiz-result').classList.remove('hidden');
+                        document.getElementById('score-display').textContent = score;
+                    }
+                });
+            });
+        });
+    </script>
+ <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a0d86cb7a70e0425',t:'MTc4MTc2NjEwNy4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script>
+</body></html>
